@@ -5,10 +5,6 @@ on:
       type:
         required: true
         type: string
-      is-snapshot:
-        required: false
-        type: boolean
-        default: true
       change-log:
         required: false
         type: string
@@ -36,25 +32,7 @@ jobs:
         run: |
           ./gradlew clean shadowJar --info --stacktrace
       -
-        name: Publish Modrinth
-        if: ${{ !inputs.is-snapshot }}
-        env:
-          IS_SNAPSHOT: ${{ inputs.is-snapshot }}
-          CHANGE_LOG: ${{ inputs.change-log }}
-          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-        run: |
-          ./gradlew modrinth modrinthSyncBody --info --stacktrace
-      -
-        name: Publish CurseForge
-        if: ${{ !inputs.is-snapshot }}
-        env:
-          IS_SNAPSHOT: ${{ inputs.is-snapshot }}
-          CHANGE_LOG: ${{ inputs.change-log }}
-          CURSE_TOKEN: ${{ secrets.CURSE_TOKEN }}
-        run: |
-          ./gradlew curseforge --info --stacktrace
-      -
         uses: actions/upload-artifact@v4
         with:
-          name: I18nUpdateMod-${{ inputs.type }}-${{ github.run_number }}
+          name: VMTUCore-${{ inputs.type }}-${{ github.run_number }}
           path: build/libs

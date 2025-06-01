@@ -1,9 +1,9 @@
-package i18nupdatemod.core;
+package top.vmcn.vmtu.core.pack;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import i18nupdatemod.util.FileUtil;
-import i18nupdatemod.util.Log;
+import top.vmcn.vmtu.core.VMTUCore;
+import top.vmcn.vmtu.core.util.FileUtil;
 import org.apache.commons.io.IOUtils;
 
 import java.io.InputStream;
@@ -39,7 +39,7 @@ public class ResourcePackConverter {
                 StandardCharsets.UTF_8)) {
 //            zos.setMethod(ZipOutputStream.STORED);
             for (Path p : sourcePath) {
-                Log.info("Converting: " + p);
+                VMTUCore.LOGGER.info("Converting: " + p);
                 try (ZipFile zf = new ZipFile(p.toFile(), StandardCharsets.UTF_8)) {
                     for (Enumeration<? extends ZipEntry> e = zf.entries(); e.hasMoreElements(); ) {
                         ZipEntry ze = e.nextElement();
@@ -67,7 +67,7 @@ public class ResourcePackConverter {
                 }
             }
             zos.close();
-            Log.info("Converted: %s -> %s", sourcePath, tmpFilePath);
+            VMTUCore.LOGGER.info("Converted: %s -> %s", sourcePath, tmpFilePath);
             FileUtil.syncTmpFile(tmpFilePath, filePath, true);
         } catch (Exception e) {
             throw new Exception(String.format("Error converting %s to %s: %s", sourcePath, tmpFilePath, e));

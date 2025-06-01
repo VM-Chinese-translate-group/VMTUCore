@@ -1,4 +1,6 @@
-package i18nupdatemod.util;
+package top.vmcn.vmtu.core.util;
+
+import top.vmcn.vmtu.core.VMTUCore;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -25,7 +27,7 @@ public class FileUtil {
                 Files.createDirectories(path);
             }
         } catch (Exception e) {
-            Log.warning("Cannot create dir: " + e);
+            VMTUCore.LOGGER.warn("Cannot create dir: " + e);
         }
     }
 
@@ -40,14 +42,14 @@ public class FileUtil {
     public static void syncTmpFile(Path filePath, Path tmpFilePath, boolean saveToGame) throws IOException {
         //Both temp and current file not found
         if (!Files.exists(filePath) && !Files.exists(tmpFilePath)) {
-            Log.debug("Both temp and current file not found");
+            VMTUCore.LOGGER.debug("Both temp and current file not found");
             return;
         }
 
         int cmp = compareTmpFile(filePath, tmpFilePath);
         Path from, to;
         if (cmp == 0) {
-            Log.debug("Temp and current file has already been synchronized");
+            VMTUCore.LOGGER.debug("Temp and current file has already been synchronized");
             return;
         } else if (cmp < 0) {
             //Current file is newer
@@ -67,7 +69,7 @@ public class FileUtil {
         Files.copy(from, to, StandardCopyOption.REPLACE_EXISTING);
         //Ensure same last modified time
         Files.setLastModifiedTime(to, Files.getLastModifiedTime(from));
-        Log.info(String.format("Synchronized: %s -> %s", from, to));
+        VMTUCore.LOGGER.info(String.format("Synchronized: %s -> %s", from, to));
     }
 
     private static int compareTmpFile(Path filePath, Path tmpFilePath) throws IOException {

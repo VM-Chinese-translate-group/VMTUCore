@@ -1,8 +1,8 @@
-package i18nupdatemod.core;
+package top.vmcn.vmtu.core.pack;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import i18nupdatemod.util.Log;
+import top.vmcn.vmtu.core.VMTUCore;
 import org.apache.commons.io.FileUtils;
 
 import java.lang.reflect.Type;
@@ -14,14 +14,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class GameConfig {
+public class GameOptionWriter {
     private static final Gson GSON = new Gson();
     private static final Type STRING_LIST_TYPE = new TypeToken<List<String>>() {
     }.getType();
     protected Map<String, String> configs = new LinkedHashMap<>();
     private final Path configFile;
 
-    public GameConfig(Path configFile) throws Exception {
+    public GameOptionWriter(Path configFile) throws Exception {
         this.configFile = configFile;
         if (!Files.exists(configFile)) {
             return;
@@ -48,7 +48,7 @@ public class GameConfig {
         resourcePacks = resourcePacks.stream().filter(it -> !it.contains(baseName)).collect(Collectors.toList());
         resourcePacks.add(resourcePack);
         configs.put("resourcePacks", GSON.toJson(resourcePacks));
-        Log.info(String.format("Resource Packs: %s", configs.get("resourcePacks")));
+        VMTUCore.LOGGER.info(String.format("Resource Packs: %s", configs.get("resourcePacks")));
 //        configs.put("lang", "zh_cn");
     }
 }

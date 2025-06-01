@@ -1,4 +1,4 @@
-package i18nupdatemod.util;
+package top.vmcn.vmtu.core.util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

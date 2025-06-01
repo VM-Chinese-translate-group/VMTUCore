@@ -1,4 +1,4 @@
-package i18nupdatemod.entity;
+package top.vmcn.vmtu.core.metadata;
 
 import java.util.List;
 
@@ -10,7 +10,6 @@ public class GameAssetDetail {
     public static class AssetDownloadDetail {
         public String fileName;
         public String fileUrl;
-        public String md5Url;
         public String targetVersion;
     }
 }

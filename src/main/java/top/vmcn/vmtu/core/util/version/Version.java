@@ -1,4 +1,4 @@
-package i18nupdatemod.util;
+package top.vmcn.vmtu.core.util.version;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
