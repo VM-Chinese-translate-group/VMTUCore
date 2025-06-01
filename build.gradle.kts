@@ -70,8 +70,6 @@ tasks.processResources {
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
-            from(components["java"])
-
             artifacts.artifact(tasks.shadowJar)
         }
     }
