@@ -1,10 +1,10 @@
-package top.vmcn.vmtu.core.metadata;
+package top.vmctcn.vmtu.core.metadata;
 
 import com.google.gson.Gson;
-import top.vmcn.vmtu.core.pack.PackSource;
-import top.vmcn.vmtu.core.VMTUCore;
-import top.vmcn.vmtu.core.util.version.Version;
-import top.vmcn.vmtu.core.util.version.VersionRange;
+import top.vmctcn.vmtu.core.pack.PackSource;
+import top.vmctcn.vmtu.core.VMTUCore;
+import top.vmctcn.vmtu.core.util.version.Version;
+import top.vmctcn.vmtu.core.util.version.VersionRange;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;

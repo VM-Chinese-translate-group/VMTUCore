@@ -1,13 +1,13 @@
-package top.vmcn.vmtu.core;
+package top.vmctcn.vmtu.core;
 
 import com.google.gson.Gson;
-import top.vmcn.vmtu.core.pack.GameOptionsWriter;
-import top.vmcn.vmtu.core.metadata.MetadataReader;
-import top.vmcn.vmtu.core.pack.PackSource;
-import top.vmcn.vmtu.core.pack.ResourcePack;
-import top.vmcn.vmtu.core.pack.ResourcePackConverter;
-import top.vmcn.vmtu.core.metadata.GameAssetDetail;
-import top.vmcn.vmtu.core.util.FileUtil;
+import top.vmctcn.vmtu.core.pack.GameOptionsWriter;
+import top.vmctcn.vmtu.core.metadata.MetadataReader;
+import top.vmctcn.vmtu.core.pack.PackSource;
+import top.vmctcn.vmtu.core.pack.ResourcePack;
+import top.vmctcn.vmtu.core.pack.ResourcePackConverter;
+import top.vmctcn.vmtu.core.metadata.GameAssetDetail;
+import top.vmctcn.vmtu.core.util.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

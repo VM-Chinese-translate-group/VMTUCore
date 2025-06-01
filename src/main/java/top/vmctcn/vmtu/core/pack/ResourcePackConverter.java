@@ -1,9 +1,9 @@
-package top.vmcn.vmtu.core.pack;
+package top.vmctcn.vmtu.core.pack;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import top.vmcn.vmtu.core.VMTUCore;
-import top.vmcn.vmtu.core.util.FileUtil;
+import top.vmctcn.vmtu.core.VMTUCore;
+import top.vmctcn.vmtu.core.util.FileUtil;
 import org.apache.commons.io.IOUtils;
 
 import java.io.InputStream;

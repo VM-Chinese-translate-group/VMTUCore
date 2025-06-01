@@ -1,8 +1,8 @@
-package top.vmcn.vmtu.core.pack;
+package top.vmctcn.vmtu.core.pack;
 
-import top.vmcn.vmtu.core.VMTUCore;
-import top.vmcn.vmtu.core.util.AssetUtil;
-import top.vmcn.vmtu.core.util.FileUtil;
+import top.vmctcn.vmtu.core.VMTUCore;
+import top.vmctcn.vmtu.core.util.AssetUtil;
+import top.vmctcn.vmtu.core.util.FileUtil;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

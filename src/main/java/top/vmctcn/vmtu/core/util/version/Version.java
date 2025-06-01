@@ -1,4 +1,4 @@
-package top.vmcn.vmtu.core.util.version;
+package top.vmctcn.vmtu.core.util.version;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

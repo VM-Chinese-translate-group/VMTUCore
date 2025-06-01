@@ -1,4 +1,4 @@
-package top.vmcn.vmtu.core.util;
+package top.vmctcn.vmtu.core.util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

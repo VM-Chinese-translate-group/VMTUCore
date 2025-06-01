@@ -1,4 +1,4 @@
-package top.vmcn.vmtu.core.pack;
+package top.vmctcn.vmtu.core.pack;
 
 public enum PackSource {
     GITEE("https://gitee.com/Wulian233/vmtu/raw/main/resourcepack/");

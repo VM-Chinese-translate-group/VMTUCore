@@ -1,6 +1,6 @@
-package top.vmcn.vmtu.core.util;
+package top.vmctcn.vmtu.core.util;
 
-import top.vmcn.vmtu.core.VMTUCore;
+import top.vmctcn.vmtu.core.VMTUCore;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 

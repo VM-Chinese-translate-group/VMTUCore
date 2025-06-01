@@ -1,11 +1,10 @@
-package top.vmcn.vmtu.core.pack;
+package top.vmctcn.vmtu.core.pack;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import top.vmcn.vmtu.core.VMTUCore;
+import top.vmctcn.vmtu.core.VMTUCore;
 import org.apache.commons.io.FileUtils;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
