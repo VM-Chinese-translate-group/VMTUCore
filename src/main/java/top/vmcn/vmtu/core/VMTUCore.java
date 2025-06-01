@@ -1,7 +1,7 @@
 package top.vmcn.vmtu.core;
 
 import com.google.gson.Gson;
-import top.vmcn.vmtu.core.pack.GameOptionWriter;
+import top.vmcn.vmtu.core.pack.GameOptionsWriter;
 import top.vmcn.vmtu.core.metadata.MetadataReader;
 import top.vmcn.vmtu.core.pack.PackSource;
 import top.vmcn.vmtu.core.pack.ResourcePack;
@@ -71,7 +71,7 @@ public class VMTUCore {
             }
 
             //Apply resource pack
-            GameOptionWriter writer = new GameOptionWriter(minecraftPath.resolve("options.txt"));
+            GameOptionsWriter writer = new GameOptionsWriter(minecraftPath.resolve("options.txt"));
             writer.addResourcePack(packName,
                     (minecraftMajorVersion <= 12 ? "" : "file/") + applyFileName);
             writer.writeToFile();

@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import top.vmcn.vmtu.core.VMTUCore;
 import org.apache.commons.io.FileUtils;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -14,14 +15,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class GameOptionWriter {
+public class GameOptionsWriter {
     private static final Gson GSON = new Gson();
     private static final Type STRING_LIST_TYPE = new TypeToken<List<String>>() {
     }.getType();
     protected Map<String, String> configs = new LinkedHashMap<>();
     private final Path configFile;
 
-    public GameOptionWriter(Path configFile) throws Exception {
+    public GameOptionsWriter(Path configFile) throws Exception {
         this.configFile = configFile;
         if (!Files.exists(configFile)) {
             return;
@@ -35,6 +36,10 @@ public class GameOptionWriter {
     public void writeToFile() throws Exception {
         FileUtils.writeLines(configFile.toFile(), "UTF-8", configs.entrySet().stream()
                 .map(it -> it.getKey() + ":" + it.getValue()).collect(Collectors.toList()));
+    }
+
+    public void switchLanguage(String langCode) {
+        configs.put("lang", langCode);
     }
 
     public void addResourcePack(String baseName, String resourcePack) {
