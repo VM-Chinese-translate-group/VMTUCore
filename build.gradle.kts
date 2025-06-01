@@ -3,6 +3,7 @@ plugins {
     id("com.gradleup.shadow") version "8.+"
     id("com.modrinth.minotaur") version "2.8.4"
     id("io.github.CDAGaming.cursegradle") version "1.6.1"
+    id("maven-publish")
 }
 
 group = "VMTUCore"
@@ -63,5 +64,18 @@ tasks.processResources {
         expand(
             "version" to project.version,
         )
+    }
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["java"])
+
+            artifacts.artifact(tasks.shadowJar)
+        }
+    }
+
+    repositories {
     }
 }
