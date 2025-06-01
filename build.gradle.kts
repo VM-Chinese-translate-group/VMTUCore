@@ -1,8 +1,6 @@
 plugins {
     id("java")
     id("com.gradleup.shadow") version "8.+"
-    id("com.modrinth.minotaur") version "2.8.4"
-    id("io.github.CDAGaming.cursegradle") version "1.6.1"
     id("maven-publish")
 }
 

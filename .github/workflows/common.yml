@@ -27,8 +27,6 @@ jobs:
           cache: 'gradle'
       -
         name: Build
-        env:
-          IS_SNAPSHOT: ${{ inputs.is-snapshot }}
         run: |
           ./gradlew clean shadowJar --info --stacktrace
       -
