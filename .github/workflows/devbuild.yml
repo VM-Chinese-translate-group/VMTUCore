@@ -1,4 +1,4 @@
-name: Beta
+name: Dev Build
 on:
   push:
     branches:
@@ -6,8 +6,7 @@ on:
 
 jobs:
   build-beta:
-    name: Build Beta
+    name: Build Dev
     uses: ./.github/workflows/common.yml
     with:
-      type: Beta
-    secrets: inherit
+      type: Dev Build
