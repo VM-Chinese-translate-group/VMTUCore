@@ -105,6 +105,20 @@
       "convertFrom": [
         "1.19"
       ]
+    },
+    {
+      "gameVersions": "[1.21.6,1.21.6]",
+      "packFormat": 63,
+      "convertFrom": [
+        "1.19"
+      ]
+    },
+    {
+      "gameVersions": "[1.21.7,1.21.8]",
+      "packFormat": 64,
+      "convertFrom": [
+        "1.19"
+      ]
     }
   ],
   "assets": [
