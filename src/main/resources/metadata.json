@@ -1,5 +1,4 @@
 {
-  "version": "${version}",
   "games": [
     {
       "gameVersions": "[1.11,1.12.2]",

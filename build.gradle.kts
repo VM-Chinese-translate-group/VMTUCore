@@ -37,8 +37,6 @@ configurations.configureEach {
 }
 
 dependencies {
-    testImplementation("org.junit.jupiter:junit-jupiter-api:6.0.0-M1")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:6.0.0-M1")
     implementation("net.runelite.archive-patcher:archive-patcher-applier:1.2")
     implementation("org.slf4j:slf4j-api:2.0.17")
     compileOnly("org.jetbrains:annotations:26.0.2")
@@ -46,10 +44,6 @@ dependencies {
     implementation("commons-io:commons-io:2.19.0")
     implementation("com.google.code.gson:gson:2.13.1")
 
-}
-
-tasks.test {
-    useJUnitPlatform()
 }
 
 tasks.processResources {

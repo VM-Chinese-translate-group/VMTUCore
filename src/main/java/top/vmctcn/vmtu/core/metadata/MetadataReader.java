@@ -6,8 +6,14 @@ import top.vmctcn.vmtu.core.VMTUCore;
 import top.vmctcn.vmtu.core.util.version.Version;
 import top.vmctcn.vmtu.core.util.version.VersionRange;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -15,20 +21,31 @@ import java.util.stream.Collectors;
 public class MetadataReader {
     private static final Gson GSON = new Gson();
     private static Metadata metadata;
+    private static final URI metadataUrl = URI.create("https://gitee.com/Wulian233/vmtu/raw/main/resourcepack/metadata.json");
 
     static {
-        init();
-    }
+        try {
+            URLConnection connection = metadataUrl.toURL().openConnection();
+            connection.setRequestProperty("User-Agent", "Mozilla/5.0");
+            connection.setConnectTimeout(10000);
 
-    private static void init() {
-        try (InputStream is = MetadataReader.class.getResourceAsStream("/metadata.json")) {
-            if (is != null) {
-                metadata = GSON.fromJson(new InputStreamReader(is), Metadata.class);
-            } else {
-                VMTUCore.LOGGER.warn("Error getting index: is is null");
+            try (Reader reader = new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8)) {
+                metadata = GSON.fromJson(reader, Metadata.class);
+            } catch (Exception e) {
+                VMTUCore.LOGGER.warn("Error reading metadata.json.", e);
+                VMTUCore.LOGGER.warn("Reading local metadata.json.");
+                try (InputStream is = MetadataReader.class.getResourceAsStream("/metadata.json")) {
+                    if (is != null) {
+                        metadata = GSON.fromJson(new InputStreamReader(is), Metadata.class);
+                    } else {
+                        VMTUCore.LOGGER.warn("Error getting index: is is null");
+                    }
+                } catch (Exception exception) {
+                    VMTUCore.LOGGER.warn("Error getting index: " + exception);
+                }
             }
-        } catch (Exception e) {
-            VMTUCore.LOGGER.warn("Error getting index: " + e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

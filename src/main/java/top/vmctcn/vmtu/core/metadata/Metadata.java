@@ -3,7 +3,6 @@ package top.vmctcn.vmtu.core.metadata;
 import java.util.List;
 
 public class Metadata {
-    public String version;
     public List<GameMetadata> games;
     public List<AssetMetadata> assets;
 
