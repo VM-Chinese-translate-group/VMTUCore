@@ -22,7 +22,14 @@ public class VMTUCore {
     public static final Logger LOGGER = LoggerFactory.getLogger(VMTUCore.class);
     public static final Gson GSON = new Gson();
 
-    public static void init(Path minecraftPath, String minecraftVersion, String packName, PackIndex packIndex, int customPackIndex) {
+    public static void init(
+            Path minecraftPath,
+            String minecraftVersion,
+            String packName,
+            String extraPackName,
+            ExtraPackIndex extraPackIndex,
+            int customExtraPackIndex
+    ) {
         LOGGER.debug(String.format("Minecraft path: %s", minecraftPath));
         String localStorage = getLocalStoragePos(minecraftPath);
         LOGGER.debug(String.format("Local Storage Pos: %s", localStorage));
@@ -69,7 +76,7 @@ public class VMTUCore {
 
             //Apply resource pack
             GameOptionsWriter writer = new GameOptionsWriter(minecraftPath.resolve("options.txt"));
-            writer.addResourcePack(packName, (minecraftMajorVersion <= 12 ? "" : "file/") + applyFileName, packIndex, customPackIndex);
+            writer.addResourcePack(packName, (minecraftMajorVersion <= 12 ? "" : "file/") + applyFileName, extraPackName, extraPackIndex, customExtraPackIndex);
             writer.writeToFile();
         } catch (Exception e) {
             LOGGER.warn(String.format("Failed to update resource pack: %s", e));

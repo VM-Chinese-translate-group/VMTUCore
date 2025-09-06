@@ -42,7 +42,7 @@ public class GameOptionsWriter {
         VMTUCore.LOGGER.info(String.format("Game Language: %s", configs.get("lang")));
     }
 
-    public void addResourcePack(String baseName, String resourcePack, PackIndex packIndex, int customPackIndex) {
+    public void addResourcePack(String baseName, String resourcePack, String extraResourcePack, ExtraPackIndex extraPackIndex, int customPackIndex) {
         List<String> resourcePacks = GSON.fromJson(
                 configs.computeIfAbsent("resourcePacks", it -> "[]"), STRING_LIST_TYPE);
         //If resource packs already contains target resource pack, nothing to do
@@ -53,7 +53,7 @@ public class GameOptionsWriter {
         resourcePacks = resourcePacks.stream().filter(it -> !it.contains(baseName)).collect(Collectors.toList());
 
         // set pack index
-        if (packIndex == PackIndex.TOP_OF_CFPA) {
+        if (extraPackIndex.isTopOfCfpaPack()) {
             // get Minecraft-Mod-Language-Modpack name in resourcePacks
             String cfpaPackName = "";
             for (int i = 0; i < resourcePacks.size(); i++) {
@@ -66,9 +66,10 @@ public class GameOptionsWriter {
             //Remove other Minecraft-Mod-Language-Modpack, we need re-index
             resourcePacks = resourcePacks.stream().filter(it -> !it.contains("Minecraft-Mod-Language-Modpack")).collect(Collectors.toList());
             // re-index
-            resourcePacks.add(0, resourcePack);
+            resourcePacks.add(0, extraResourcePack);
             resourcePacks.add(1, cfpaPackName);
-        } else if (packIndex == PackIndex.BOTTOM_OF_CFPA) {
+            resourcePacks.add(2, resourcePack);
+        } else if (extraPackIndex.isBottomOfCfpaPack()) {
             // get Minecraft-Mod-Language-Modpack index in resourcePacks
             int cfpaIndex = -1;
             for (int i = 0; i < resourcePacks.size(); i++) {
@@ -82,13 +83,16 @@ public class GameOptionsWriter {
             // else use top index
             if (cfpaIndex != -1) {
                 int index = Math.max(0, Math.min(cfpaIndex + 1, resourcePacks.size()));
-                resourcePacks.add(index, resourcePack);
+                resourcePacks.add(index, extraResourcePack);
+                resourcePacks.add(index + 1, resourcePack);
             } else {
-                resourcePacks.add(0, resourcePack);
+                resourcePacks.add(0, extraResourcePack);
+                resourcePacks.add(1, resourcePack);
             }
-        } else if (packIndex == PackIndex.CUSTOM_INDEX) {
+        } else if (extraPackIndex.isCustomIndex()) {
             int index = Math.max(0, Math.min(customPackIndex, resourcePacks.size()));
-            resourcePacks.add(index, resourcePack);
+            resourcePacks.add(index, extraResourcePack);
+            resourcePacks.add(index + 1, resourcePack);
         }
 
         configs.put("resourcePacks", GSON.toJson(resourcePacks));
