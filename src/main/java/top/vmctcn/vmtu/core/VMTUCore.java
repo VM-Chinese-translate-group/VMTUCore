@@ -1,11 +1,8 @@
 package top.vmctcn.vmtu.core;
 
 import com.google.gson.Gson;
-import top.vmctcn.vmtu.core.pack.GameOptionsWriter;
+import top.vmctcn.vmtu.core.pack.*;
 import top.vmctcn.vmtu.core.metadata.MetadataReader;
-import top.vmctcn.vmtu.core.pack.PackSource;
-import top.vmctcn.vmtu.core.pack.ResourcePack;
-import top.vmctcn.vmtu.core.pack.ResourcePackConverter;
 import top.vmctcn.vmtu.core.metadata.GameAssetDetail;
 import top.vmctcn.vmtu.core.util.FileUtil;
 import org.slf4j.Logger;
@@ -23,9 +20,8 @@ import java.util.stream.Stream;
 public class VMTUCore {
     public static final String LOCAL_PATH = "vmtu";
     public static final Logger LOGGER = LoggerFactory.getLogger(VMTUCore.class);
-    public static final Gson GSON = new Gson();
 
-    public static void init(Path minecraftPath, String minecraftVersion, String packName, PackSource packSource) {
+    public static void init(Path minecraftPath, String minecraftVersion, String packName, PackIndex packIndex, int customPackIndex) {
         LOGGER.debug(String.format("Minecraft path: %s", minecraftPath));
         String localStorage = getLocalStoragePos(minecraftPath);
         LOGGER.debug(String.format("Local Storage Pos: %s", localStorage));
@@ -49,7 +45,7 @@ public class VMTUCore {
 
         try {
             //Get asset
-            GameAssetDetail assets = MetadataReader.getAssetDetail(minecraftVersion, packSource);
+            GameAssetDetail assets = MetadataReader.getAssetDetail(minecraftVersion);
 
             //Update resource pack
             List<ResourcePack> languagePacks = new ArrayList<>();
@@ -72,8 +68,7 @@ public class VMTUCore {
 
             //Apply resource pack
             GameOptionsWriter writer = new GameOptionsWriter(minecraftPath.resolve("options.txt"));
-            writer.addResourcePack(packName,
-                    (minecraftMajorVersion <= 12 ? "" : "file/") + applyFileName);
+            writer.addResourcePack(packName, (minecraftMajorVersion <= 12 ? "" : "file/") + applyFileName, packIndex, customPackIndex);
             writer.writeToFile();
         } catch (Exception e) {
             LOGGER.warn(String.format("Failed to update resource pack: %s", e));

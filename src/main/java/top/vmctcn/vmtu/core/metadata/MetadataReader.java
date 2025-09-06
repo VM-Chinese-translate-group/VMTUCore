@@ -1,7 +1,6 @@
 package top.vmctcn.vmtu.core.metadata;
 
 import com.google.gson.Gson;
-import top.vmctcn.vmtu.core.pack.PackSource;
 import top.vmctcn.vmtu.core.VMTUCore;
 import top.vmctcn.vmtu.core.util.version.Version;
 import top.vmctcn.vmtu.core.util.version.VersionRange;
@@ -10,7 +9,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
@@ -19,9 +17,10 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class MetadataReader {
+    private static final String ASSET_ROOT = "https://gitee.com/Wulian233/vmtu/raw/main/resourcepack/";
     private static final Gson GSON = new Gson();
     private static Metadata metadata;
-    private static final URI metadataUrl = URI.create("https://gitee.com/Wulian233/vmtu/raw/main/resourcepack/metadata.json");
+    private static final URI metadataUrl = URI.create(ASSET_ROOT + "metadata.json");
 
     static {
         try {
@@ -64,14 +63,14 @@ public class MetadataReader {
         return current.stream().findFirst().orElseGet(() -> current.get(0));
     }
 
-    public static GameAssetDetail getAssetDetail(String minecraftVersion, PackSource packSource) {
+    public static GameAssetDetail getAssetDetail(String minecraftVersion) {
         Metadata.GameMetadata convert = getGameMetaData(minecraftVersion);
         GameAssetDetail ret = new GameAssetDetail();
 
         ret.downloads = convert.convertFrom.stream().map(MetadataReader::getAssetMetaData).map(it -> {
             GameAssetDetail.AssetDownloadDetail adi = new GameAssetDetail.AssetDownloadDetail();
             adi.fileName = it.filename;
-            adi.fileUrl = packSource.getUrl() + it.filename;
+            adi.fileUrl = ASSET_ROOT + it.filename;
             adi.targetVersion = it.targetVersion;
             return adi;
         }).collect(Collectors.toList());
