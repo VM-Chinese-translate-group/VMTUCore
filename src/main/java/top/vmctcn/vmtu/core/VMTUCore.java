@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 public class VMTUCore {
     public static final String LOCAL_PATH = "vmtu";
     public static final Logger LOGGER = LoggerFactory.getLogger(VMTUCore.class);
-    private static final Gson GSON = new Gson();
+    public static final Gson GSON = new Gson();
 
     public static void init(Path minecraftPath, String minecraftVersion, String packName, PackIndex packIndex, int customPackIndex) {
         LOGGER.debug(String.format("Minecraft path: %s", minecraftPath));
