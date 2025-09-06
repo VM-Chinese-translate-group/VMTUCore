@@ -52,47 +52,51 @@ public class GameOptionsWriter {
         //Remove other VM Pack
         resourcePacks = resourcePacks.stream().filter(it -> !it.contains(baseName)).collect(Collectors.toList());
 
-        // set pack index
-        if (extraPackIndex.isTopOfCfpaPack()) {
-            // get Minecraft-Mod-Language-Modpack name in resourcePacks
-            String cfpaPackName = "";
-            for (int i = 0; i < resourcePacks.size(); i++) {
-                if (resourcePacks.get(i).contains("Minecraft-Mod-Language-Modpack")) {
-                    cfpaPackName = resourcePacks.get(i);
-                    break;
+        if (extraResourcePack.length() > 2) {
+            // set pack index
+            if (extraPackIndex.isTopOfCfpaPack()) {
+                // get Minecraft-Mod-Language-Modpack name in resourcePacks
+                String cfpaPackName = "";
+                for (int i = 0; i < resourcePacks.size(); i++) {
+                    if (resourcePacks.get(i).contains("Minecraft-Mod-Language-Modpack")) {
+                        cfpaPackName = resourcePacks.get(i);
+                        break;
+                    }
                 }
-            }
 
-            //Remove other Minecraft-Mod-Language-Modpack, we need re-index
-            resourcePacks = resourcePacks.stream().filter(it -> !it.contains("Minecraft-Mod-Language-Modpack")).collect(Collectors.toList());
-            // re-index
-            resourcePacks.add(0, extraResourcePack);
-            resourcePacks.add(1, cfpaPackName);
-            resourcePacks.add(2, resourcePack);
-        } else if (extraPackIndex.isBottomOfCfpaPack()) {
-            // get Minecraft-Mod-Language-Modpack index in resourcePacks
-            int cfpaIndex = -1;
-            for (int i = 0; i < resourcePacks.size(); i++) {
-                if (resourcePacks.get(i).contains("Minecraft-Mod-Language-Modpack")) {
-                    cfpaIndex = i;
-                    break;
+                //Remove other Minecraft-Mod-Language-Modpack, we need re-index
+                resourcePacks = resourcePacks.stream().filter(it -> !it.contains("Minecraft-Mod-Language-Modpack")).collect(Collectors.toList());
+                // re-index
+                resourcePacks.add(0, extraResourcePack);
+                resourcePacks.add(1, cfpaPackName);
+                resourcePacks.add(2, resourcePack);
+            } else if (extraPackIndex.isBottomOfCfpaPack()) {
+                // get Minecraft-Mod-Language-Modpack index in resourcePacks
+                int cfpaIndex = -1;
+                for (int i = 0; i < resourcePacks.size(); i++) {
+                    if (resourcePacks.get(i).contains("Minecraft-Mod-Language-Modpack")) {
+                        cfpaIndex = i;
+                        break;
+                    }
                 }
-            }
 
-            // if found Minecraft-Mod-Language-Modpack index in resourcePacks, put VM Pack bottom of Minecraft-Mod-Language-Modpack
-            // else use top index
-            if (cfpaIndex != -1) {
-                int index = Math.max(0, Math.min(cfpaIndex + 1, resourcePacks.size()));
+                // if found Minecraft-Mod-Language-Modpack index in resourcePacks, put VM Pack bottom of Minecraft-Mod-Language-Modpack
+                // else use top index
+                if (cfpaIndex != -1) {
+                    int index = Math.max(0, Math.min(cfpaIndex + 1, resourcePacks.size()));
+                    resourcePacks.add(index, extraResourcePack);
+                    resourcePacks.add(index + 1, resourcePack);
+                } else {
+                    resourcePacks.add(0, extraResourcePack);
+                    resourcePacks.add(1, resourcePack);
+                }
+            } else if (extraPackIndex.isCustomIndex()) {
+                int index = Math.max(0, Math.min(customPackIndex, resourcePacks.size()));
                 resourcePacks.add(index, extraResourcePack);
                 resourcePacks.add(index + 1, resourcePack);
-            } else {
-                resourcePacks.add(0, extraResourcePack);
-                resourcePacks.add(1, resourcePack);
             }
-        } else if (extraPackIndex.isCustomIndex()) {
-            int index = Math.max(0, Math.min(customPackIndex, resourcePacks.size()));
-            resourcePacks.add(index, extraResourcePack);
-            resourcePacks.add(index + 1, resourcePack);
+        } else {
+            resourcePacks.add(resourcePack);
         }
 
         configs.put("resourcePacks", GSON.toJson(resourcePacks));
