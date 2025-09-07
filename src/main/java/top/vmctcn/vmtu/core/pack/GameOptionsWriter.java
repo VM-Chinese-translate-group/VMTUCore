@@ -42,6 +42,12 @@ public class GameOptionsWriter {
         VMTUCore.LOGGER.info(String.format("Game Language: %s", configs.get("lang")));
     }
 
+    public int getResourcePacksSize() {
+        List<String> resourcePacks = GSON.fromJson(
+                configs.computeIfAbsent("resourcePacks", it -> "[]"), STRING_LIST_TYPE);
+        return resourcePacks.size();
+    }
+
     public void addResourcePack(String baseName, String resourcePack, String extraResourcePack, ExtraPackIndex extraPackIndex, int customPackIndex) {
         List<String> resourcePacks = GSON.fromJson(
                 configs.computeIfAbsent("resourcePacks", it -> "[]"), STRING_LIST_TYPE);
@@ -53,7 +59,7 @@ public class GameOptionsWriter {
         resourcePacks = resourcePacks.stream().filter(it -> !it.contains(baseName)).collect(Collectors.toList());
 
         if (extraResourcePack.length() > 2) {
-            // set pack index
+            // set extra pack index
             if (extraPackIndex.isTopOfCfpaPack()) {
                 // get Minecraft-Mod-Language-Modpack name in resourcePacks
                 String cfpaPackName = "";

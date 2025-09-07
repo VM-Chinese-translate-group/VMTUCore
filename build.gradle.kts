@@ -16,10 +16,8 @@ tasks.shadowJar {
     minimize()
     archiveBaseName.set("VMTUCore")
     relocate("com.google.archivepatcher", "include.com.google.archivepatcher")
-    relocate("org.slf4j", "include.org.slf4j")
     dependencies {
         include(dependency("net.runelite.archive-patcher:archive-patcher-applier:.*"))
-        include(dependency("org.slf4j:slf4j-api:.*"))
     }
     exclude("LICENSE")
 }
