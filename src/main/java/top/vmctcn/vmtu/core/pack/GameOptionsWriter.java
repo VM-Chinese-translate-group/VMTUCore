@@ -79,20 +79,20 @@ public class GameOptionsWriter {
         }
 
         if (needLoadExtraResourcePack && extraResourcePack.length() > 2) {
-            //Remove resource pack, we need re-index
-            if (needDownloadResourcePack) {
-                resourcePacks = resourcePacks.stream().filter(it -> {
-                    return !it.contains("Minecraft-Mod-Language-Modpack") && !it.contains(extraResourcePack) && !it.contains(resourcePack);
-                }).collect(Collectors.toList());
-            } else {
-                resourcePacks = resourcePacks.stream().filter(it -> {
-                    return !it.contains("Minecraft-Mod-Language-Modpack") && !it.contains(extraResourcePack);
-                }).collect(Collectors.toList());
-            }
-
             // set extra pack index
             switch (extraPackIndex) {
                 case TOP_OF_CFPA:
+                    //Remove resource pack, we need re-index
+                    if (needDownloadResourcePack) {
+                        resourcePacks = resourcePacks.stream().filter(it -> {
+                            return !it.contains("Minecraft-Mod-Language-Modpack") && !it.contains(extraResourcePack) && !it.contains(resourcePack);
+                        }).collect(Collectors.toList());
+                    } else {
+                        resourcePacks = resourcePacks.stream().filter(it -> {
+                            return !it.contains("Minecraft-Mod-Language-Modpack") && !it.contains(extraResourcePack);
+                        }).collect(Collectors.toList());
+                    }
+
                     // re-index
                     resourcePacks.add(cfpaPackName);
                     if (needDownloadResourcePack) {
@@ -102,6 +102,17 @@ public class GameOptionsWriter {
 
                     break;
                 case BOTTOM_OF_CFPA:
+                    //Remove resource pack, we need re-index
+                    if (needDownloadResourcePack) {
+                        resourcePacks = resourcePacks.stream().filter(it -> {
+                            return !it.contains("Minecraft-Mod-Language-Modpack") && !it.contains(extraResourcePack) && !it.contains(resourcePack);
+                        }).collect(Collectors.toList());
+                    } else {
+                        resourcePacks = resourcePacks.stream().filter(it -> {
+                            return !it.contains("Minecraft-Mod-Language-Modpack") && !it.contains(extraResourcePack);
+                        }).collect(Collectors.toList());
+                    }
+
                     // re-index
                     if (needDownloadResourcePack) {
                         resourcePacks.add(resourcePack);
@@ -111,6 +122,17 @@ public class GameOptionsWriter {
 
                     break;
                 case CUSTOM_INDEX:
+                    //Remove resource pack, we need re-index
+                    if (needDownloadResourcePack) {
+                        resourcePacks = resourcePacks.stream().filter(it -> {
+                            return !it.contains("Minecraft-Mod-Language-Modpack") && !it.contains(extraResourcePack) && !it.contains(resourcePack);
+                        }).collect(Collectors.toList());
+                    } else {
+                        resourcePacks = resourcePacks.stream().filter(it -> {
+                            return !it.contains("Minecraft-Mod-Language-Modpack") && !it.contains(extraResourcePack);
+                        }).collect(Collectors.toList());
+                    }
+
                     int index = Math.max(0, Math.min(customPackIndex, resourcePacks.size()));
 
                     // re-index
