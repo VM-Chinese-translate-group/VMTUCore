@@ -9,9 +9,7 @@ import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class GameOptionsWriter {
@@ -60,7 +58,6 @@ public class GameOptionsWriter {
 
         if (extraResourcePack.length() > 2) {
             int resourcePacksIndex = resourcePacks.size();
-            int resourcePacksFixedIndex = resourcePacksIndex - 1;
 
             // get Minecraft-Mod-Language-Modpack name in resourcePacks
             String cfpaPackName = "";
@@ -68,6 +65,7 @@ public class GameOptionsWriter {
                 if (packName.contains("Minecraft-Mod-Language-Modpack")) {
                     cfpaPackName = packName;
                     VMTUCore.LOGGER.info("Get CFPA pack name: {}", packName);
+                    break;
                 }
             }
 
@@ -78,14 +76,14 @@ public class GameOptionsWriter {
                     resourcePacks = resourcePacks.stream().filter(it -> !it.contains("Minecraft-Mod-Language-Modpack")).collect(Collectors.toList());
 
                     // re-index
-                    resourcePacks.add(resourcePacksFixedIndex + 1, "file/" + extraResourcePack);
-                    resourcePacks.add(resourcePacksFixedIndex + 2, cfpaPackName);
-                    resourcePacks.add(resourcePacksFixedIndex + 3, resourcePack);
+                    resourcePacks.add("file/" + extraResourcePack);
+                    resourcePacks.add(cfpaPackName);
+                    resourcePacks.add(resourcePack);
                     break;
                 case BOTTOM_OF_CFPA:
                     resourcePacks = resourcePacks.stream().filter(it -> !it.contains("Minecraft-Mod-Language-Modpack")).collect(Collectors.toList());
 
-                    resourcePacks.add(resourcePacksFixedIndex + 1, cfpaPackName);
+                    resourcePacks.add(cfpaPackName);
 
                     // get Minecraft-Mod-Language-Modpack index in resourcePacks
                     int cfpaIndex = -1;
@@ -99,17 +97,18 @@ public class GameOptionsWriter {
                     // else use top index
                     if (cfpaIndex != -1) {
                         int index = Math.max(0, Math.min(cfpaIndex + 1, resourcePacksIndex));
-                        resourcePacks.add(index, "file/" + extraResourcePack);
+                        resourcePacks.add("file/" + extraResourcePack);
                         resourcePacks.add(index + 1, resourcePack);
                     } else {
-                        resourcePacks.add(resourcePacksIndex + 1, "file/" + extraResourcePack);
-                        resourcePacks.add(resourcePacksIndex + 2, resourcePack);
+                        resourcePacks.add(cfpaPackName);
+                        resourcePacks.add("file/" + extraResourcePack);
+                        resourcePacks.add(resourcePack);
                     }
                     break;
                 case CUSTOM_INDEX:
                     int index = Math.max(0, Math.min(customPackIndex, resourcePacksIndex));
-                    resourcePacks.add(resourcePacksIndex + index, "file/" + extraResourcePack);
-                    resourcePacks.add(resourcePacksIndex + index + 1, resourcePack);
+                    resourcePacks.add("file/" + extraResourcePack);
+                    resourcePacks.add(index + 1, resourcePack);
                     break;
             }
         } else {
