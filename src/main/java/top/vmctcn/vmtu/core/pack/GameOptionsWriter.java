@@ -59,51 +59,57 @@ public class GameOptionsWriter {
         resourcePacks = resourcePacks.stream().filter(it -> !it.contains(baseName)).collect(Collectors.toList());
 
         if (extraResourcePack.length() > 2) {
+            int resourcePacksIndex = resourcePacks.size();
+            int resourcePacksFixedIndex = resourcePacksIndex - 1;
+
+            // get Minecraft-Mod-Language-Modpack name in resourcePacks
+            String cfpaPackName = "";
+            for (String packName : resourcePacks) {
+                if (packName.contains("Minecraft-Mod-Language-Modpack")) {
+                    cfpaPackName = packName;
+                    VMTUCore.LOGGER.info("Get CFPA pack name: {}", packName);
+                }
+            }
+
             // set extra pack index
             switch (extraPackIndex) {
                 case TOP_OF_CFPA:
-                    // get Minecraft-Mod-Language-Modpack name in resourcePacks
-                    String cfpaPackName = "";
-                    for (String packName : resourcePacks) {
-                        if (packName.contains("Minecraft-Mod-Language-Modpack")) {
-                            cfpaPackName = packName;
-                            VMTUCore.LOGGER.info("Get CFPA pack name: {}", packName);
-                            break;
-                        }
-                    }
-
                     //Remove other Minecraft-Mod-Language-Modpack, we need re-index
                     resourcePacks = resourcePacks.stream().filter(it -> !it.contains("Minecraft-Mod-Language-Modpack")).collect(Collectors.toList());
+
                     // re-index
-                    addExtraResourcePack(resourcePacks, 0, extraResourcePack);
-                    resourcePacks.add(1, cfpaPackName);
-                    resourcePacks.add(2, resourcePack);
+                    resourcePacks.add(resourcePacksFixedIndex + 1, "file/" + extraResourcePack);
+                    resourcePacks.add(resourcePacksFixedIndex + 2, cfpaPackName);
+                    resourcePacks.add(resourcePacksFixedIndex + 3, resourcePack);
                     break;
                 case BOTTOM_OF_CFPA:
+                    resourcePacks = resourcePacks.stream().filter(it -> !it.contains("Minecraft-Mod-Language-Modpack")).collect(Collectors.toList());
+
+                    resourcePacks.add(resourcePacksFixedIndex + 1, cfpaPackName);
+
                     // get Minecraft-Mod-Language-Modpack index in resourcePacks
                     int cfpaIndex = -1;
                     for (int i = 0; i < resourcePacks.size(); i++) {
                         if (resourcePacks.get(i).contains("Minecraft-Mod-Language-Modpack")) {
                             cfpaIndex = i;
-                            break;
                         }
                     }
 
                     // if found Minecraft-Mod-Language-Modpack index in resourcePacks, put VM Pack bottom of Minecraft-Mod-Language-Modpack
                     // else use top index
                     if (cfpaIndex != -1) {
-                        int index = Math.max(0, Math.min(cfpaIndex + 1, resourcePacks.size()));
-                        addExtraResourcePack(resourcePacks, index, extraResourcePack);
+                        int index = Math.max(0, Math.min(cfpaIndex + 1, resourcePacksIndex));
+                        resourcePacks.add(index, "file/" + extraResourcePack);
                         resourcePacks.add(index + 1, resourcePack);
                     } else {
-                        addExtraResourcePack(resourcePacks, 0, extraResourcePack);
-                        resourcePacks.add(1, resourcePack);
+                        resourcePacks.add(resourcePacksIndex + 1, "file/" + extraResourcePack);
+                        resourcePacks.add(resourcePacksIndex + 2, resourcePack);
                     }
                     break;
                 case CUSTOM_INDEX:
-                    int index = Math.max(0, Math.min(customPackIndex, resourcePacks.size()));
-                    addExtraResourcePack(resourcePacks, index, extraResourcePack);
-                    resourcePacks.add(index + 1, resourcePack);
+                    int index = Math.max(0, Math.min(customPackIndex, resourcePacksIndex));
+                    resourcePacks.add(resourcePacksIndex + index, "file/" + extraResourcePack);
+                    resourcePacks.add(resourcePacksIndex + index + 1, resourcePack);
                     break;
             }
         } else {
@@ -112,13 +118,5 @@ public class GameOptionsWriter {
 
         configs.put("resourcePacks", GSON.toJson(resourcePacks));
         VMTUCore.LOGGER.info(String.format("Resource Packs: %s", configs.get("resourcePacks")));
-    }
-
-    private static void addExtraResourcePack(List<String> resourcePacks, int index, String extraResourcePack) {
-        if (extraResourcePack.contains(".zip")) {
-            resourcePacks.add(index, "file/" + extraResourcePack);
-        } else {
-            resourcePacks.add(index, extraResourcePack);
-        }
     }
 }

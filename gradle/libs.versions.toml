@@ -1,7 +1,7 @@
 [versions]
 core-name = "VMTUCore"
 core-group = "top.vmctcn.vmtu.core"
-core-version = "0.2.7"
+core-version = "0.2.8"
 
 archive-patcher-applier = "1.2"
 slf4j = "2.0.17"
