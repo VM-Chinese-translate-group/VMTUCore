@@ -4,8 +4,8 @@ plugins {
     id("maven-publish")
 }
 
-group = libs.versions.core.group
-version = libs.versions.core.version
+group = libs.versions.core.group.get()
+version = libs.versions.core.version.get()
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
