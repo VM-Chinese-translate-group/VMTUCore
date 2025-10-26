@@ -28,7 +28,9 @@ public class VMTUCore {
             String packName,
             String extraPackName,
             ExtraPackIndex extraPackIndex,
-            int customExtraPackIndex
+            int customExtraPackIndex,
+            boolean needDownloadResourcePack,
+            boolean needLoadExtraResourcePack
     ) {
         LOGGER.debug(String.format("Minecraft path: %s", minecraftPath));
         String localStorage = getLocalStoragePos(minecraftPath);
@@ -54,29 +56,40 @@ public class VMTUCore {
         try {
             //Get asset
             GameAssetDetail assets = MetadataReader.getAssetDetail(minecraftVersion);
-
-            //Update resource pack
-            List<ResourcePack> languagePacks = new ArrayList<>();
-            boolean convertNotNeed = assets.downloads.size() == 1 && assets.downloads.get(0).targetVersion.equals(minecraftVersion);
             String applyFileName = assets.downloads.get(0).fileName;
-            for (GameAssetDetail.AssetDownloadDetail it : assets.downloads) {
-                FileUtil.setTemporaryDirPath(Paths.get(localStorage, "." + LOCAL_PATH, it.targetVersion));
-                ResourcePack languagePack = new ResourcePack(it.fileName, convertNotNeed);
-                languagePack.checkUpdate(it.fileUrl);
-                languagePacks.add(languagePack);
-            }
 
-            //Convert resourcepack
-            if (!convertNotNeed) {
-                FileUtil.setTemporaryDirPath(Paths.get(localStorage, "." + LOCAL_PATH, minecraftVersion));
-                applyFileName = assets.covertFileName;
-                ResourcePackConverter converter = new ResourcePackConverter(languagePacks, applyFileName);
-                converter.convert(assets.covertPackFormat, getResourcePackDescription(assets.downloads));
+            if (needDownloadResourcePack) {
+                //Update resource pack
+                List<ResourcePack> languagePacks = new ArrayList<>();
+                boolean convertNotNeed = assets.downloads.size() == 1 && assets.downloads.get(0).targetVersion.equals(minecraftVersion);
+                applyFileName = assets.downloads.get(0).fileName;
+                for (GameAssetDetail.AssetDownloadDetail it : assets.downloads) {
+                    FileUtil.setTemporaryDirPath(Paths.get(localStorage, "." + LOCAL_PATH, it.targetVersion));
+                    ResourcePack languagePack = new ResourcePack(it.fileName, convertNotNeed);
+                    languagePack.checkUpdate(it.fileUrl);
+                    languagePacks.add(languagePack);
+                }
+
+                //Convert resourcepack
+                if (!convertNotNeed) {
+                    FileUtil.setTemporaryDirPath(Paths.get(localStorage, "." + LOCAL_PATH, minecraftVersion));
+                    applyFileName = assets.covertFileName;
+                    ResourcePackConverter converter = new ResourcePackConverter(languagePacks, applyFileName);
+                    converter.convert(assets.covertPackFormat, getResourcePackDescription(assets.downloads));
+                }
             }
 
             //Apply resource pack
             GameOptionsWriter writer = new GameOptionsWriter(minecraftPath.resolve("options.txt"));
-            writer.addResourcePack(packName, (minecraftMajorVersion <= 12 ? "" : "file/") + applyFileName, extraPackName, extraPackIndex, customExtraPackIndex);
+            writer.addResourcePack(
+                    packName,
+                    (minecraftMajorVersion <= 12 ? "" : "file/") + applyFileName,
+                    extraPackName,
+                    extraPackIndex,
+                    customExtraPackIndex,
+                    needDownloadResourcePack,
+                    needLoadExtraResourcePack
+            );
             writer.writeToFile();
         } catch (Exception e) {
             LOGGER.warn(String.format("Failed to update resource pack: %s", e));
