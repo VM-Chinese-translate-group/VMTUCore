@@ -95,18 +95,18 @@ public class GameOptionsWriter {
                 case TOP_OF_CFPA:
                     // re-index
                     resourcePacks.add(cfpaPackName);
-                    resourcePacks.add("file/" + extraResourcePack);
                     if (needDownloadResourcePack) {
                         resourcePacks.add(resourcePack);
                     }
+                    resourcePacks.add("file/" + extraResourcePack);
 
                     break;
                 case BOTTOM_OF_CFPA:
                     // re-index
-                    resourcePacks.add("file/" + extraResourcePack);
                     if (needDownloadResourcePack) {
                         resourcePacks.add(resourcePack);
                     }
+                    resourcePacks.add("file/" + extraResourcePack);
                     resourcePacks.add(cfpaPackName);
 
                     break;
