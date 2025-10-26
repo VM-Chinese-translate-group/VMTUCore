@@ -67,7 +67,7 @@ public class ResourcePackConverter {
                 }
             }
             zos.close();
-            VMTUCore.LOGGER.info("Converted: %s -> %s", sourcePath, tmpFilePath);
+            VMTUCore.LOGGER.info("Converted: {} -> {}", sourcePath, tmpFilePath);
             FileUtil.syncTmpFile(tmpFilePath, filePath, true);
         } catch (Exception e) {
             throw new Exception(String.format("Error converting %s to %s: %s", sourcePath, tmpFilePath, e));

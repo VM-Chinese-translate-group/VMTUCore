@@ -12,18 +12,6 @@ public enum ExtraPackIndex {
         this.extraPackIndexPos = extraPackIndexPos;
     }
 
-    public boolean isTopOfCfpaPack() {
-        return extraPackIndexPos == IndexPosition.TOP;
-    }
-
-    public boolean isBottomOfCfpaPack() {
-        return extraPackIndexPos == IndexPosition.BOTTOM;
-    }
-
-    public boolean isCustomIndex() {
-        return extraPackIndexPos == IndexPosition.CUSTOM;
-    }
-
     public enum IndexPosition {
         TOP,
         BOTTOM,

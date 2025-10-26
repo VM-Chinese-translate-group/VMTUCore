@@ -4,8 +4,8 @@ plugins {
     id("maven-publish")
 }
 
-group = "VMTUCore"
-version = project.properties["version"].toString()
+group = libs.versions.core.group
+version = libs.versions.core.version
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
@@ -14,7 +14,7 @@ java {
 
 tasks.shadowJar {
     minimize()
-    archiveBaseName.set("VMTUCore")
+    archiveBaseName.set(libs.versions.core.name)
     relocate("com.google.archivepatcher", "include.com.google.archivepatcher")
     dependencies {
         include(dependency("net.runelite.archive-patcher:archive-patcher-applier:.*"))
@@ -35,12 +35,12 @@ configurations.configureEach {
 }
 
 dependencies {
-    implementation("net.runelite.archive-patcher:archive-patcher-applier:1.2")
-    implementation("org.slf4j:slf4j-api:2.0.17")
-    compileOnly("org.jetbrains:annotations:26.0.2")
+    implementation(libs.archive.patcher.applier)
+    implementation(libs.slf4j)
+    compileOnly(libs.jetbrains.annotations)
 
-    implementation("commons-io:commons-io:2.19.0")
-    implementation("com.google.code.gson:gson:2.13.1")
+    implementation(libs.commons.io)
+    implementation(libs.gson)
 
 }
 
