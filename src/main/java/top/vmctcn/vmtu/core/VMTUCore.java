@@ -27,7 +27,7 @@ public class VMTUCore {
             String minecraftVersion,
             String packName,
             String extraPackName,
-            ExtraPackIndex extraPackIndex,
+            ResourcePackIndex resourcePackIndex,
             int customExtraPackIndex,
             boolean needDownloadResourcePack,
             boolean needLoadExtraResourcePack
@@ -84,8 +84,8 @@ public class VMTUCore {
             writer.addResourcePack(
                     packName,
                     (minecraftMajorVersion <= 12 ? "" : "file/") + applyFileName,
-                    extraPackName,
-                    extraPackIndex,
+                    (minecraftMajorVersion <= 12 ? "" : "file/") + extraPackName,
+                    resourcePackIndex,
                     customExtraPackIndex,
                     needDownloadResourcePack,
                     needLoadExtraResourcePack
