@@ -7,7 +7,6 @@ on:
       - reopened
     branches:
       - 'main'
-      - 'legacy'
 
 jobs:
   build-pull-request:
