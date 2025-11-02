@@ -1,12 +1,12 @@
 package top.vmctcn.vmtu.core;
 
 import com.google.gson.Gson;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import top.vmctcn.vmtu.core.pack.*;
 import top.vmctcn.vmtu.core.metadata.MetadataReader;
 import top.vmctcn.vmtu.core.metadata.GameAssetDetail;
 import top.vmctcn.vmtu.core.util.FileUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,12 +14,13 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class VMTUCore {
     public static final String LOCAL_PATH = "vmtu";
-    public static final Logger LOGGER = LoggerFactory.getLogger(VMTUCore.class);
+    public static final Logger LOGGER = LogManager.getLogger(VMTUCore.class);
     public static final Gson GSON = new Gson();
 
     public static void init(
