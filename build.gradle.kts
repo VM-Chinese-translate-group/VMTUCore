@@ -36,12 +36,11 @@ configurations.configureEach {
 
 dependencies {
     implementation(libs.archive.patcher.applier)
-    implementation(libs.slf4j)
+    implementation(libs.log4j)
     compileOnly(libs.jetbrains.annotations)
 
     implementation(libs.commons.io)
     implementation(libs.gson)
-
 }
 
 tasks.processResources {
