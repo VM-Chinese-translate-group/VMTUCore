@@ -1,6 +1,5 @@
 package top.vmctcn.vmtu.core;
 
-import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import top.vmctcn.vmtu.core.pack.*;
@@ -21,7 +20,6 @@ import java.util.stream.Stream;
 public class VMTUCore {
     public static final String LOCAL_PATH = "vmtu";
     public static final Logger LOGGER = LogManager.getLogger(VMTUCore.class);
-    public static final Gson GSON = new Gson();
 
     public static void init(
             Path minecraftPath,

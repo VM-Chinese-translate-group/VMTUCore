@@ -46,11 +46,9 @@ public class ResourcePackConverter {
                         String name = ze.getName();
                         // Don't put same file
                         if (fileList.contains(name)) {
-//                            Log.debug(name + ": DUPLICATE");
                             continue;
                         }
                         fileList.add(name);
-//                        Log.debug(name);
 
                         // Put file into new zip
                         zos.putNextEntry(new ZipEntry(name));

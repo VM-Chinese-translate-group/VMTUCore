@@ -128,18 +128,12 @@ public class GameOptionsWriter {
     }
 
     public static List<String> removeResourcePacks(List<String> resourcePacks, String resourcePackName, String extraPackName, boolean canDownloadResourcePack, boolean canLoadExtraPack) {
-        if (canDownloadResourcePack == true) {
-            return resourcePacks.stream().filter(it -> {
-                return !it.contains("Minecraft-Mod-Language-Modpack") && !it.contains(extraPackName) && !it.contains(resourcePackName);
-            }).collect(Collectors.toList());
-        } else if (canLoadExtraPack == true) {
-            return resourcePacks.stream().filter(it -> {
-                return !it.contains("Minecraft-Mod-Language-Modpack") && !it.contains(extraPackName);
-            }).collect(Collectors.toList());
+        if (canDownloadResourcePack) {
+            return resourcePacks.stream().filter(it -> !it.contains("Minecraft-Mod-Language-Modpack") && !it.contains(extraPackName) && !it.contains(resourcePackName)).collect(Collectors.toList());
+        } else if (canLoadExtraPack) {
+            return resourcePacks.stream().filter(it -> !it.contains("Minecraft-Mod-Language-Modpack") && !it.contains(extraPackName)).collect(Collectors.toList());
         } else {
-            return resourcePacks.stream().filter(it -> {
-                return !it.contains("Minecraft-Mod-Language-Modpack");
-            }).collect(Collectors.toList());
+            return resourcePacks.stream().filter(it -> !it.contains("Minecraft-Mod-Language-Modpack")).collect(Collectors.toList());
         }
     }
 
@@ -147,28 +141,28 @@ public class GameOptionsWriter {
         switch (resourcePackIndex) {
             case TOP_OF_CFPA:
                 resourcePacks.add(cfpaPackName);
-                if (canDownloadResourcePack == true) {
+                if (canDownloadResourcePack) {
                     resourcePacks.add(resourcePackName);
                 }
-                if (canLoadExtraPack == true) {
+                if (canLoadExtraPack) {
                     resourcePacks.add(extraPackName);
                 }
                 break;
             case BOTTOM_OF_CFPA:
-                if (canDownloadResourcePack == true) {
+                if (canDownloadResourcePack) {
                     resourcePacks.add(resourcePackName);
                 }
-                if (canLoadExtraPack == true) {
+                if (canLoadExtraPack) {
                     resourcePacks.add(extraPackName);
                 }
                 resourcePacks.add(cfpaPackName);
                 break;
             case CUSTOM_INDEX:
                 resourcePacks.add(cfpaPackName);
-                if (canDownloadResourcePack == true) {
+                if (canDownloadResourcePack) {
                     resourcePacks.add(resourcePackName);
                 }
-                if (canLoadExtraPack == true) {
+                if (canLoadExtraPack) {
                     resourcePacks.add(customIndex, extraPackName);
                 }
                 break;
