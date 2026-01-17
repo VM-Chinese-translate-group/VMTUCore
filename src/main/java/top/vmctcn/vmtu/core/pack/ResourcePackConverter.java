@@ -2,6 +2,7 @@ package top.vmctcn.vmtu.core.pack;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.jetbrains.annotations.Nullable;
 import top.vmctcn.vmtu.core.VMTUCore;
 import top.vmctcn.vmtu.core.util.FileUtil;
 import org.apache.commons.io.IOUtils;
@@ -75,6 +76,10 @@ public class ResourcePackConverter {
     private byte[] convertPackMeta(InputStream is, int packFormat, String description) {
         PackMeta meta = GSON.fromJson(new InputStreamReader(is, StandardCharsets.UTF_8), PackMeta.class);
         meta.pack.pack_format = packFormat;
+        if (packFormat > 64) {
+            meta.pack.min_format = packFormat;
+            meta.pack.max_format = packFormat;
+        }
         meta.pack.description = description;
         return GSON.toJson(meta).getBytes(StandardCharsets.UTF_8);
     }
@@ -84,6 +89,8 @@ public class ResourcePackConverter {
 
         private static class Pack {
             int pack_format;
+            @Nullable Integer min_format;
+            @Nullable Integer max_format;
             String description;
         }
     }
