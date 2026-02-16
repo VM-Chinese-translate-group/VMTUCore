@@ -91,8 +91,7 @@ public class VMTUCore {
             );
             writer.writeToFile();
         } catch (Exception e) {
-            LOGGER.warn(String.format("Failed to update resource pack: %s", e));
-//            e.printStackTrace();
+            LOGGER.error("Failed to update resource pack: %s", e);
         }
     }
 

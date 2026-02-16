@@ -2,7 +2,6 @@ package top.vmctcn.vmtu.core.metadata;
 
 import com.google.gson.Gson;
 import top.vmctcn.vmtu.core.VMTUCore;
-import top.vmctcn.vmtu.core.util.AssetUtil;
 import top.vmctcn.vmtu.core.util.version.Version;
 import top.vmctcn.vmtu.core.util.version.VersionRange;
 
@@ -67,23 +66,17 @@ public class MetadataReader {
     public static GameAssetDetail getAssetDetail(String minecraftVersion) {
         Metadata.GameMetadata convert = getGameMetaData(minecraftVersion);
         GameAssetDetail ret = new GameAssetDetail();
-
-        String assetRoot = AssetUtil.getFastestUrl();
-
-        VMTUCore.LOGGER.debug("Using asset root: {}", assetRoot);
-
-        ret.downloads = createDownloadDetails(convert, assetRoot);
+        ret.downloads = createDownloadDetails(convert);
         ret.covertPackFormat = convert.packFormat;
         ret.covertFileName = String.format("VMTranslationPack-Converted-%s.zip", minecraftVersion);
         return ret;
     }
 
-    private static List<GameAssetDetail.AssetDownloadDetail> createDownloadDetails(Metadata.GameMetadata convert, String assetRoot) {
+    private static List<GameAssetDetail.AssetDownloadDetail> createDownloadDetails(Metadata.GameMetadata convert) {
         return convert.convertFrom.stream().map(MetadataReader::getAssetMetaData).map(it -> {
-
             GameAssetDetail.AssetDownloadDetail adi = new GameAssetDetail.AssetDownloadDetail();
             adi.fileName = it.filename;
-            adi.fileUrl = assetRoot + it.filename;
+            adi.fileUrl = ASSET_ROOT + it.filename;
             adi.targetVersion = it.targetVersion;
             return adi;
         }).collect(Collectors.toList());
