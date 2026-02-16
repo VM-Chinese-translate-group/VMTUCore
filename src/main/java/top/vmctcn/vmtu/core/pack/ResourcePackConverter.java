@@ -2,7 +2,7 @@ package top.vmctcn.vmtu.core.pack;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.jetbrains.annotations.Nullable;
+import com.google.gson.annotations.JsonAdapter;
 import top.vmctcn.vmtu.core.VMTUCore;
 import top.vmctcn.vmtu.core.util.FileUtil;
 import org.apache.commons.io.IOUtils;
@@ -12,17 +12,18 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 public class ResourcePackConverter {
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    private static final Gson GSON = new GsonBuilder()
+            .setPrettyPrinting()
+            .registerTypeAdapter(Object.class, new PackFormatFlexibleNumberAdapter())
+            .registerTypeAdapter(Object.class, new PackSupportedFormatsAdapter())
+            .create();
     private final List<Path> sourcePath;
     private final Path filePath;
     private final Path tmpFilePath;
@@ -75,10 +76,11 @@ public class ResourcePackConverter {
 
     private byte[] convertPackMeta(InputStream is, int packFormat, String description) {
         PackMeta meta = GSON.fromJson(new InputStreamReader(is, StandardCharsets.UTF_8), PackMeta.class);
-        meta.pack.pack_format = packFormat;
         if (packFormat > 64) {
             meta.pack.min_format = packFormat;
             meta.pack.max_format = packFormat;
+        } else {
+            meta.pack.pack_format = packFormat;
         }
         meta.pack.description = description;
         return GSON.toJson(meta).getBytes(StandardCharsets.UTF_8);
@@ -89,8 +91,12 @@ public class ResourcePackConverter {
 
         private static class Pack {
             int pack_format;
-            @Nullable Integer min_format;
-            @Nullable Integer max_format;
+            @JsonAdapter(PackSupportedFormatsAdapter.class)
+            Object supported_formats; // Make wulian happy, idk why VMTranslationPack's pack.mcmeta need it
+            @JsonAdapter(PackFormatFlexibleNumberAdapter.class)
+            Object min_format;
+            @JsonAdapter(PackFormatFlexibleNumberAdapter.class)
+            Object max_format;
             String description;
         }
     }
