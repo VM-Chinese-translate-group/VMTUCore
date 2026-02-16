@@ -118,7 +118,7 @@ public class GameOptionsWriter {
                 resourcePacks = removeResourcePacks(resourcePacks, resourcePack, null, needDownloadResourcePack, false);
 
                 // re-index
-                setResourcePacks(resourcePacks, cfpaPackName, resourcePack, extraResourcePack, needDownloadResourcePack, false, ResourcePackIndex.DEFAULT, 0);
+                setResourcePacks(resourcePacks, cfpaPackName, resourcePack, null, needDownloadResourcePack, false, ResourcePackIndex.DEFAULT, 0);
 
                 break;
         }
@@ -129,7 +129,7 @@ public class GameOptionsWriter {
 
     public static List<String> removeResourcePacks(List<String> resourcePacks, String resourcePackName, String extraPackName, boolean canDownloadResourcePack, boolean canLoadExtraPack) {
         if (canDownloadResourcePack) {
-            if (extraPackName != null) {
+            if (extraPackName != null || extraPackName.length() < 2) {
                 return resourcePacks.stream().filter(it -> !it.contains("Minecraft-Mod-Language-Modpack") && !it.contains(extraPackName) && !it.contains(resourcePackName)).collect(Collectors.toList());
             } else {
                 return resourcePacks.stream().filter(it -> !it.contains("Minecraft-Mod-Language-Modpack") && !it.contains(resourcePackName)).collect(Collectors.toList());
@@ -144,7 +144,9 @@ public class GameOptionsWriter {
     public static void setResourcePacks(List<String> resourcePacks, String cfpaPackName, String resourcePackName, String extraPackName, boolean canDownloadResourcePack, boolean canLoadExtraPack, ResourcePackIndex resourcePackIndex, int customIndex) {
         switch (resourcePackIndex) {
             case TOP_OF_CFPA:
-                resourcePacks.add(cfpaPackName);
+                if (cfpaPackName.length() > 2) {
+                    resourcePacks.add(cfpaPackName);
+                }
                 if (canDownloadResourcePack) {
                     resourcePacks.add(resourcePackName);
                 }
@@ -159,10 +161,14 @@ public class GameOptionsWriter {
                 if (canLoadExtraPack) {
                     resourcePacks.add(extraPackName);
                 }
-                resourcePacks.add(cfpaPackName);
+                if (cfpaPackName.length() > 2) {
+                    resourcePacks.add(cfpaPackName);
+                }
                 break;
             case CUSTOM_INDEX:
-                resourcePacks.add(cfpaPackName);
+                if (cfpaPackName.length() > 2) {
+                    resourcePacks.add(cfpaPackName);
+                }
                 if (canDownloadResourcePack) {
                     resourcePacks.add(resourcePackName);
                 }
@@ -172,7 +178,9 @@ public class GameOptionsWriter {
                 break;
             case DEFAULT:
             default:
-                resourcePacks.add(cfpaPackName);
+                if (cfpaPackName.length() > 2) {
+                    resourcePacks.add(cfpaPackName);
+                }
                 if (canDownloadResourcePack) {
                     resourcePacks.add(resourcePackName);
                 }
