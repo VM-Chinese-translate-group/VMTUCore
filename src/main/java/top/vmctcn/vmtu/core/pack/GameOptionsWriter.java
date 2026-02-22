@@ -79,7 +79,7 @@ public class GameOptionsWriter {
             }
         }
 
-        if (needLoadExtraResourcePack && extraResourcePack.length() > 2) {
+        if (needLoadExtraResourcePack && extraResourcePack != null && extraResourcePack.isEmpty()) {
             canLoadExtraPack = true;
         }
 
@@ -129,7 +129,7 @@ public class GameOptionsWriter {
 
     public static List<String> removeResourcePacks(List<String> resourcePacks, String resourcePackName, String extraPackName, boolean canDownloadResourcePack, boolean canLoadExtraPack) {
         if (canDownloadResourcePack) {
-            if (extraPackName != null || extraPackName.length() < 2) {
+            if (extraPackName != null) {
                 return resourcePacks.stream().filter(it -> !it.contains("Minecraft-Mod-Language-Modpack") && !it.contains(extraPackName) && !it.contains(resourcePackName)).collect(Collectors.toList());
             } else {
                 return resourcePacks.stream().filter(it -> !it.contains("Minecraft-Mod-Language-Modpack") && !it.contains(resourcePackName)).collect(Collectors.toList());
