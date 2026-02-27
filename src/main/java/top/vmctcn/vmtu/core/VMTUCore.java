@@ -36,78 +36,63 @@ public class VMTUCore {
         LOGGER.debug(String.format("Local Storage Pos: %s", localStorage));
 
         try {
-            if (isNeteaseEnvironment()) {
-                LOGGER.warn("VMTUCore will get resource pack from Internet, whose content is uncontrolled.");
-                LOGGER.warn("This behavior contraries to Netease Minecraft developer content review rule: " +
-                        "forbidden the content in game not match the content for reviewing.");
-                LOGGER.warn("To follow this rule, VMTUCore won't download any thing.");
-                LOGGER.warn("VMTUCore会从互联网获取内容不可控的资源包。");
-                LOGGER.warn("这一行为违背了网易我的世界「开发者内容审核制度」：禁止上传与提审内容不一致的游戏内容。");
-                LOGGER.warn("为了遵循这一制度，VMTUCore不会下载任何内容。");
+            Class.forName("com.netease.mc.mod.network.common.Library");
+            LOGGER.warn("VMTUCore will get resource pack from Internet, whose content is uncontrolled.");
+            LOGGER.warn("This behavior contraries to Netease Minecraft developer content review rule: " +
+                    "forbidden the content in game not match the content for reviewing.");
+            LOGGER.warn("To follow this rule, VMTUCore won't download any thing.");
+            LOGGER.warn("VMTUCore会从互联网获取内容不可控的资源包。");
+            LOGGER.warn("这一行为违背了网易我的世界「开发者内容审核制度」：禁止上传与提审内容不一致的游戏内容。");
+            LOGGER.warn("为了遵循这一制度，VMTUCore不会下载任何内容。");
+            return;
+        } catch (ClassNotFoundException ignored) {
+        }
+
+        FileUtil.setResourcePackDirPath(minecraftPath.resolve("resourcepacks"));
+
+        int minecraftMajorVersion = Integer.parseInt(minecraftVersion.split("\\.")[1]);
+
+        try {
+            //Get asset
+            GameAssetDetail assets = MetadataReader.getAssetDetail(minecraftVersion);
+            String applyFileName = assets.downloads.get(0).fileName;
+
+            if (needDownloadResourcePack) {
+                //Update resource pack
+                List<ResourcePack> languagePacks = new ArrayList<>();
+                boolean convertNotNeed = assets.downloads.size() == 1 && assets.downloads.get(0).targetVersion.equals(minecraftVersion);
+                applyFileName = assets.downloads.get(0).fileName;
+                for (GameAssetDetail.AssetDownloadDetail it : assets.downloads) {
+                    FileUtil.setTemporaryDirPath(Paths.get(localStorage, "." + LOCAL_PATH, it.targetVersion));
+                    ResourcePack languagePack = new ResourcePack(it.fileName, convertNotNeed);
+                    languagePack.checkUpdate(it.fileUrl);
+                    languagePacks.add(languagePack);
+                }
+
+                //Convert resourcepack
+                if (!convertNotNeed) {
+                    FileUtil.setTemporaryDirPath(Paths.get(localStorage, "." + LOCAL_PATH, minecraftVersion));
+                    applyFileName = assets.covertFileName;
+                    ResourcePackConverter converter = new ResourcePackConverter(languagePacks, applyFileName);
+                    converter.convert(assets.covertPackFormat, getResourcePackDescription(assets.downloads));
+                }
             }
 
-            FileUtil.setResourcePackDirPath(minecraftPath.resolve("resourcepacks"));
-
-            int minecraftMajorVersion = Integer.parseInt(minecraftVersion.split("\\.")[1]);
-            
-            GameAssetDetail assets = MetadataReader.getAssetDetail(minecraftVersion);
-            String applyFileName = processResourcePacks(assets, localStorage, minecraftVersion, needDownloadResourcePack);
-            applyResourcePack(minecraftPath, packName, extraPackName, applyFileName, resourcePackIndex,
-                    customExtraPackIndex, minecraftMajorVersion, needDownloadResourcePack, needLoadExtraResourcePack);
+            //Apply resource pack
+            GameOptionsWriter writer = new GameOptionsWriter(minecraftPath.resolve("options.txt"));
+            writer.addResourcePack(
+                    packName,
+                    (minecraftMajorVersion <= 12 ? "" : "file/") + applyFileName,
+                    (minecraftMajorVersion <= 12 ? "" : "file/") + extraPackName,
+                    resourcePackIndex,
+                    customExtraPackIndex,
+                    needDownloadResourcePack,
+                    needLoadExtraResourcePack
+            );
+            writer.writeToFile();
         } catch (Exception e) {
             LOGGER.error("Failed to update resource pack: %s", e);
         }
-    }
-
-    private static boolean isNeteaseEnvironment() {
-        try {
-            Class.forName("com.netease.mc.mod.network.common.Library");
-            return true;
-        } catch (ClassNotFoundException e) {
-            return false;
-        }
-    }
-
-    private static String processResourcePacks(GameAssetDetail assets, String localStorage,
-                                                String minecraftVersion, boolean needDownloadResourcePack) throws Exception {
-        String applyFileName = assets.downloads.get(0).fileName;
-
-        if (needDownloadResourcePack) {
-            List<ResourcePack> languagePacks = new ArrayList<>();
-            boolean convertNotNeed = assets.downloads.size() == 1 && assets.downloads.get(0).targetVersion.equals(minecraftVersion);
-            applyFileName = assets.downloads.get(0).fileName;
-            for (GameAssetDetail.AssetDownloadDetail it : assets.downloads) {
-                FileUtil.setTemporaryDirPath(Paths.get(localStorage, "." + LOCAL_PATH, it.targetVersion));
-                ResourcePack languagePack = new ResourcePack(it.fileName, convertNotNeed);
-                languagePack.checkUpdate(it.fileUrl);
-                languagePacks.add(languagePack);
-            }
-
-            if (!convertNotNeed) {
-                FileUtil.setTemporaryDirPath(Paths.get(localStorage, "." + LOCAL_PATH, minecraftVersion));
-                applyFileName = assets.covertFileName;
-                ResourcePackConverter converter = new ResourcePackConverter(languagePacks, applyFileName);
-                converter.convert(assets.covertPackFormat, getResourcePackDescription(assets.downloads));
-            }
-        }
-        return applyFileName;
-    }
-
-    private static void applyResourcePack(Path minecraftPath, String packName, String extraPackName,
-                                          String applyFileName, ResourcePackIndex resourcePackIndex,
-                                          int customExtraPackIndex, int minecraftMajorVersion,
-                                          boolean needDownloadResourcePack, boolean needLoadExtraResourcePack) throws Exception {
-        GameOptionsWriter writer = new GameOptionsWriter(minecraftPath.resolve("options.txt"));
-        writer.addResourcePack(
-                packName,
-                (minecraftMajorVersion <= 12 ? "" : "file/") + applyFileName,
-                (minecraftMajorVersion <= 12 ? "" : "file/") + extraPackName,
-                resourcePackIndex,
-                customExtraPackIndex,
-                needDownloadResourcePack,
-                needLoadExtraResourcePack
-        );
-        writer.writeToFile();
     }
 
     private static String getResourcePackDescription(List<GameAssetDetail.AssetDownloadDetail> downloads) {
