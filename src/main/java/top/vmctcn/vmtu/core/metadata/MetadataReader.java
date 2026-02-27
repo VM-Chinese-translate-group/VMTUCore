@@ -5,7 +5,6 @@ import top.vmctcn.vmtu.core.VMTUCore;
 import top.vmctcn.vmtu.core.util.version.Version;
 import top.vmctcn.vmtu.core.util.version.VersionRange;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -23,28 +22,41 @@ public class MetadataReader {
     private static final URI metadataUrl = URI.create(ASSET_ROOT + "metadata.json");
 
     static {
+        metadata = loadFromRemote();
+        if (metadata == null) {
+            metadata = loadFromLocal();
+        }
+        if (metadata == null) {
+            throw new RuntimeException("Failed to load metadata from both remote and local sources");
+        }
+    }
+
+    private static Metadata loadFromRemote() {
         try {
             URLConnection connection = metadataUrl.toURL().openConnection();
             connection.setRequestProperty("User-Agent", "Mozilla/5.0");
             connection.setConnectTimeout(10000);
+            connection.setReadTimeout(10000);
 
             try (Reader reader = new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8)) {
-                metadata = GSON.fromJson(reader, Metadata.class);
-            } catch (Exception e) {
-                VMTUCore.LOGGER.warn("Error reading metadata.json.", e);
-                VMTUCore.LOGGER.warn("Reading local metadata.json.");
-                try (InputStream is = MetadataReader.class.getResourceAsStream("/metadata.json")) {
-                    if (is != null) {
-                        metadata = GSON.fromJson(new InputStreamReader(is), Metadata.class);
-                    } else {
-                        VMTUCore.LOGGER.warn("Error getting index: is is null");
-                    }
-                } catch (Exception exception) {
-                    VMTUCore.LOGGER.warn("Error getting index: " + exception);
-                }
+                return GSON.fromJson(reader, Metadata.class);
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            VMTUCore.LOGGER.warn("Failed to load remote metadata.json, falling back to local.", e);
+            return null;
+        }
+    }
+
+    private static Metadata loadFromLocal() {
+        try (InputStream is = MetadataReader.class.getResourceAsStream("/metadata.json")) {
+            if (is == null) {
+                VMTUCore.LOGGER.error("Local metadata.json not found in resources.");
+                return null;
+            }
+            return GSON.fromJson(new InputStreamReader(is, StandardCharsets.UTF_8), Metadata.class);
+        } catch (Exception e) {
+            VMTUCore.LOGGER.error("Failed to load local metadata.json.", e);
+            return null;
         }
     }
 

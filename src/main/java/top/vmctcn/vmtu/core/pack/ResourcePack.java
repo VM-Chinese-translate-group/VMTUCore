@@ -9,13 +9,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.concurrent.TimeUnit;
 
 public class ResourcePack {
-    /**
-     * Limit update check frequency
-     */
-    private static final long UPDATE_TIME_GAP = TimeUnit.DAYS.toMillis(1);
     private final String filename;
     private final Path filePath;
     private final Path tmpFilePath;
@@ -30,7 +25,7 @@ public class ResourcePack {
         try {
             FileUtil.syncTmpFile(filePath, tmpFilePath, saveToGame);
         } catch (Exception e) {
-            VMTUCore.LOGGER.warn(String.format("Error while sync temp file %s <-> %s: %s", filePath, tmpFilePath, e));
+            VMTUCore.LOGGER.warn("Error while sync temp file {} <-> {}: {}", filePath, tmpFilePath, e);
         }
     }
 
@@ -45,9 +40,9 @@ public class ResourcePack {
             Path downloadTmp = FileUtil.getTemporaryPath(filename + ".tmp");
             AssetUtil.download(fileUrl, downloadTmp);
             Files.move(downloadTmp, tmpFilePath, StandardCopyOption.REPLACE_EXISTING);
-            VMTUCore.LOGGER.debug(String.format("Updates temp file: %s", tmpFilePath));
+            VMTUCore.LOGGER.debug("Updates temp file: {}", tmpFilePath);
         } catch (Exception e) {
-            VMTUCore.LOGGER.warn("Error while downloading: %s", e);
+            VMTUCore.LOGGER.warn("Error while downloading: {}", e.getMessage());
         }
         if (!Files.exists(tmpFilePath)) {
             throw new FileNotFoundException("Tmp file not found.");
