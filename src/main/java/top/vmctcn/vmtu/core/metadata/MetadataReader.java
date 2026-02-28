@@ -2,6 +2,7 @@ package top.vmctcn.vmtu.core.metadata;
 
 import com.google.gson.Gson;
 import top.vmctcn.vmtu.core.VMTUCore;
+import top.vmctcn.vmtu.core.util.AssetUtil;
 import top.vmctcn.vmtu.core.util.version.Version;
 import top.vmctcn.vmtu.core.util.version.VersionRange;
 
@@ -16,10 +17,9 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class MetadataReader {
-    private static final String ASSET_ROOT = "https://gitee.com/Wulian233/vmtu/raw/main/resourcepack/";
     private static final Gson GSON = new Gson();
     private static Metadata metadata;
-    private static final URI metadataUrl = URI.create(ASSET_ROOT + "metadata.json");
+    private static final URI metadataUrl = URI.create(AssetUtil.getFastestResourcePackUrl() + "metadata.json");
 
     static {
         metadata = loadFromRemote();
@@ -34,7 +34,6 @@ public class MetadataReader {
     private static Metadata loadFromRemote() {
         try {
             URLConnection connection = metadataUrl.toURL().openConnection();
-            connection.setRequestProperty("User-Agent", "Mozilla/5.0");
             connection.setConnectTimeout(10000);
             connection.setReadTimeout(10000);
 
@@ -78,17 +77,21 @@ public class MetadataReader {
     public static GameAssetDetail getAssetDetail(String minecraftVersion) {
         Metadata.GameMetadata convert = getGameMetaData(minecraftVersion);
         GameAssetDetail ret = new GameAssetDetail();
-        ret.downloads = createDownloadDetails(convert);
+
+        String assetRoot = AssetUtil.getFastestUrl();
+        VMTUCore.LOGGER.debug("Using asset root: {}", assetRoot);
+
+        ret.downloads = createDownloadDetails(convert, assetRoot);
         ret.covertPackFormat = convert.packFormat;
         ret.covertFileName = String.format("VMTranslationPack-Converted-%s.zip", minecraftVersion);
         return ret;
     }
 
-    private static List<GameAssetDetail.AssetDownloadDetail> createDownloadDetails(Metadata.GameMetadata convert) {
+    private static List<GameAssetDetail.AssetDownloadDetail> createDownloadDetails(Metadata.GameMetadata convert, String assetRoot) {
         return convert.convertFrom.stream().map(MetadataReader::getAssetMetaData).map(it -> {
             GameAssetDetail.AssetDownloadDetail adi = new GameAssetDetail.AssetDownloadDetail();
             adi.fileName = it.filename;
-            adi.fileUrl = ASSET_ROOT + it.filename;
+            adi.fileUrl = assetRoot + "resourcepack/" + it.filename;
             adi.targetVersion = it.targetVersion;
             return adi;
         }).collect(Collectors.toList());
