@@ -137,19 +137,19 @@
   "assets": [
     {
       "targetVersion": "1.12.2",
-      "filename": "VM汉化组模组汉化包1.12.2.zip"
+      "filename": "VMTranslationPack-1.12.2.zip"
     },
     {
       "targetVersion": "1.16",
-      "filename": "VM汉化组模组汉化包1.16.zip"
+      "filename": "VMTranslationPack-1.16.x.zip"
     },
     {
       "targetVersion": "1.18",
-      "filename": "VM汉化组模组汉化包1.18.zip"
+      "filename": "VMTranslationPack-1.18.x.zip"
     },
     {
       "targetVersion": "1.19",
-      "filename": "VM汉化组模组汉化包1.19及以上.zip"
+      "filename": "VMTranslationPack-1.19.x.zip"
     }
   ]
 }

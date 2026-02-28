@@ -70,7 +70,7 @@ public class GameOptionsWriter {
         }
 
         // get Minecraft-Mod-Language-Modpack name in resourcePacks
-        String cfpaPackName = "";
+        String cfpaPackName = null;
         for (String packName : resourcePacks) {
             if (packName.contains("Minecraft-Mod-Language-Modpack")) {
                 cfpaPackName = packName;
