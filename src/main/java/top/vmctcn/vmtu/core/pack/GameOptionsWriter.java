@@ -144,7 +144,7 @@ public class GameOptionsWriter {
     public static void setResourcePacks(List<String> resourcePacks, String cfpaPackName, String resourcePackName, String extraPackName, boolean canDownloadResourcePack, boolean canLoadExtraPack, ResourcePackIndex resourcePackIndex, int customIndex) {
         switch (resourcePackIndex) {
             case TOP_OF_CFPA:
-                if (cfpaPackName.length() > 2) {
+                if (cfpaPackName != null) {
                     resourcePacks.add(cfpaPackName);
                 }
                 if (canDownloadResourcePack) {
@@ -161,12 +161,12 @@ public class GameOptionsWriter {
                 if (canLoadExtraPack) {
                     resourcePacks.add(extraPackName);
                 }
-                if (cfpaPackName.length() > 2) {
+                if (cfpaPackName != null) {
                     resourcePacks.add(cfpaPackName);
                 }
                 break;
             case CUSTOM_INDEX:
-                if (cfpaPackName.length() > 2) {
+                if (cfpaPackName != null) {
                     resourcePacks.add(cfpaPackName);
                 }
                 if (canDownloadResourcePack) {
@@ -178,7 +178,7 @@ public class GameOptionsWriter {
                 break;
             case DEFAULT:
             default:
-                if (cfpaPackName.length() > 2) {
+                if (cfpaPackName != null) {
                     resourcePacks.add(cfpaPackName);
                 }
                 if (canDownloadResourcePack) {
