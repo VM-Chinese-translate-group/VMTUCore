@@ -24,7 +24,6 @@ public class VMTUCore {
     public static void init(
             Path minecraftPath,
             String minecraftVersion,
-            String packName,
             String extraPackName,
             ResourcePackIndex resourcePackIndex,
             int customExtraPackIndex,
