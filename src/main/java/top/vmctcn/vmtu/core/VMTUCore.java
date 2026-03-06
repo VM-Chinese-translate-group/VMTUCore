@@ -81,7 +81,6 @@ public class VMTUCore {
             //Apply resource pack
             GameOptionsWriter writer = new GameOptionsWriter(minecraftPath.resolve("options.txt"));
             writer.addResourcePack(
-                    packName,
                     (minecraftMajorVersion <= 12 ? "" : "file/") + applyFileName,
                     (minecraftMajorVersion <= 12 ? "" : "file/") + extraPackName,
                     resourcePackIndex,

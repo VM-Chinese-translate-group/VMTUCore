@@ -46,7 +46,6 @@ public class GameOptionsWriter {
     }
 
     public void addResourcePack(
-            String baseName,
             String resourcePack,
             String extraResourcePack,
             ResourcePackIndex resourcePackIndex,
@@ -66,7 +65,21 @@ public class GameOptionsWriter {
 
         //Remove other VM Pack
         if (needDownloadResourcePack) {
-            resourcePacks = resourcePacks.stream().filter(it -> !it.contains(baseName)).collect(Collectors.toList());
+            // get Legacy VM pack name in resourcePacks
+            String legacyPackName = null;
+            for (String packName : resourcePacks) {
+                if (packName.contains("VM汉化组模组汉化包")) {
+                    legacyPackName = packName;
+                    VMTUCore.LOGGER.info("Get legacy VM pack name: {}", packName);
+                    break;
+                }
+            }
+            if (legacyPackName != null) {
+                String finalLegacyPackName = legacyPackName;
+                resourcePacks = resourcePacks.stream().filter(it -> !it.contains("VMTranslationPack") && !it.contains(finalLegacyPackName)).collect(Collectors.toList());
+            } else {
+                resourcePacks = resourcePacks.stream().filter(it -> !it.contains("VMTranslationPack")).collect(Collectors.toList());
+            }
         }
 
         // get Minecraft-Mod-Language-Modpack name in resourcePacks
@@ -124,7 +137,7 @@ public class GameOptionsWriter {
         }
 
         configs.put("resourcePacks", GSON.toJson(resourcePacks));
-        VMTUCore.LOGGER.info(String.format("Resource Packs: %s", configs.get("resourcePacks")));
+        VMTUCore.LOGGER.info("Resource Packs: {}", configs.get("resourcePacks"));
     }
 
     public static List<String> removeResourcePacks(List<String> resourcePacks, String resourcePackName, String extraPackName, boolean canDownloadResourcePack, boolean canLoadExtraPack) {
