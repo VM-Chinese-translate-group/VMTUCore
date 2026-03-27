@@ -34,6 +34,10 @@ public class GameOptionsWriter {
                 .map(it -> it.getKey() + ":" + it.getValue()).collect(Collectors.toList()));
     }
 
+    public Map<String, String> getConfigs() {
+        return this.configs;
+    }
+
     public void switchLanguage(String langCode) {
         configs.put("lang", langCode);
         VMTUCore.LOGGER.info(String.format("Game Language: %s", configs.get("lang")));

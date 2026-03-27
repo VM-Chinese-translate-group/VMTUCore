@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 import top.vmctcn.vmtu.core.pack.*;
 import top.vmctcn.vmtu.core.metadata.MetadataReader;
 import top.vmctcn.vmtu.core.metadata.GameAssetDetail;
+import top.vmctcn.vmtu.core.util.DefaultConfigs;
 import top.vmctcn.vmtu.core.util.FileUtil;
 
 import java.nio.file.Files;
@@ -22,44 +23,43 @@ public class VMTUCore {
     public static final Logger LOGGER = LogManager.getLogger(VMTUCore.class);
 
     public static void init(
-            Path minecraftPath,
-            String minecraftVersion,
+            Path gamePath,
+            String gameVersion,
             String extraPackName,
             ResourcePackIndex resourcePackIndex,
             int customExtraPackIndex,
             boolean needDownloadResourcePack,
             boolean needLoadExtraResourcePack
     ) {
-        LOGGER.debug(String.format("Minecraft path: %s", minecraftPath));
-        String localStorage = getLocalStoragePos(minecraftPath);
+        LOGGER.debug(String.format("Minecraft path: %s", gamePath));
+        String localStorage = getLocalStoragePos();
         LOGGER.debug(String.format("Local Storage Pos: %s", localStorage));
 
-        try {
-            Class.forName("com.netease.mc.mod.network.common.Library");
-            LOGGER.warn("VMTUCore will get resource pack from Internet, whose content is uncontrolled.");
-            LOGGER.warn("This behavior contraries to Netease Minecraft developer content review rule: " +
-                    "forbidden the content in game not match the content for reviewing.");
-            LOGGER.warn("To follow this rule, VMTUCore won't download any thing.");
-            LOGGER.warn("VMTUCore会从互联网获取内容不可控的资源包。");
-            LOGGER.warn("这一行为违背了网易我的世界「开发者内容审核制度」：禁止上传与提审内容不一致的游戏内容。");
-            LOGGER.warn("为了遵循这一制度，VMTUCore不会下载任何内容。");
-            return;
-        } catch (ClassNotFoundException ignored) {
-        }
+        neteaseWarn();
 
-        FileUtil.setResourcePackDirPath(minecraftPath.resolve("resourcepacks"));
+        FileUtil.setResourcePackDirPath(gamePath.resolve("resourcepacks"));
 
-        int minecraftMajorVersion = Integer.parseInt(minecraftVersion.split("\\.")[1]);
+        loadTranslationPack(localStorage, gamePath, gameVersion, extraPackName, resourcePackIndex, customExtraPackIndex, needDownloadResourcePack, needLoadExtraResourcePack);
+    }
+
+    public static void loadTranslationPack(String localStorage, Path gamePath,
+                                           String gameVersion, String extraPackName,
+                                           ResourcePackIndex resourcePackIndex,
+                                           int customExtraPackIndex,
+                                           boolean needDownloadResourcePack,
+                                           boolean needLoadExtraResourcePack) {
+        String[] gameVersionParts = gameVersion.split("\\.");
+        int gameMajorVersion = Integer.parseInt(gameVersionParts.length > 2 ? gameVersionParts[1] : gameVersionParts[0]);
 
         try {
             //Get asset
-            GameAssetDetail assets = MetadataReader.getAssetDetail(minecraftVersion);
+            GameAssetDetail assets = MetadataReader.getAssetDetail(gameVersion);
             String applyFileName = assets.downloads.get(0).fileName;
 
             if (needDownloadResourcePack) {
                 //Update resource pack
                 List<ResourcePack> languagePacks = new ArrayList<>();
-                boolean convertNotNeed = assets.downloads.size() == 1 && assets.downloads.get(0).targetVersion.equals(minecraftVersion);
+                boolean convertNotNeed = assets.downloads.size() == 1 && assets.downloads.get(0).targetVersion.equals(gameVersion);
                 applyFileName = assets.downloads.get(0).fileName;
                 for (GameAssetDetail.AssetDownloadDetail it : assets.downloads) {
                     FileUtil.setTemporaryDirPath(Paths.get(localStorage, "." + LOCAL_PATH, it.targetVersion));
@@ -70,7 +70,7 @@ public class VMTUCore {
 
                 //Convert resourcepack
                 if (!convertNotNeed) {
-                    FileUtil.setTemporaryDirPath(Paths.get(localStorage, "." + LOCAL_PATH, minecraftVersion));
+                    FileUtil.setTemporaryDirPath(Paths.get(localStorage, "." + LOCAL_PATH, gameVersion));
                     applyFileName = assets.covertFileName;
                     ResourcePackConverter converter = new ResourcePackConverter(languagePacks, applyFileName);
                     converter.convert(assets.covertPackFormat, getResourcePackDescription(assets.downloads));
@@ -78,18 +78,41 @@ public class VMTUCore {
             }
 
             //Apply resource pack
-            GameOptionsWriter writer = new GameOptionsWriter(minecraftPath.resolve("options.txt"));
-            writer.addResourcePack(
-                    (minecraftMajorVersion <= 12 ? "" : "file/") + applyFileName,
-                    (minecraftMajorVersion <= 12 ? "" : "file/") + extraPackName,
-                    resourcePackIndex,
-                    customExtraPackIndex,
-                    needDownloadResourcePack,
-                    needLoadExtraResourcePack
-            );
-            writer.writeToFile();
+            for (DefaultConfigs mod : DefaultConfigs.getMods()) {
+                if (mod.getOptionsFilePath() != null) {
+                    LOGGER.info("Checked {} file", mod.getOptionsFilePath());
+
+                    GameOptionsWriter writer = new GameOptionsWriter(gamePath.resolve(mod.getOptionsFilePath()));
+
+                    if (writer.getConfigs().get("resourcePacks") != null) {
+                        writer.addResourcePack(
+                                (gameMajorVersion <= 12 ? "" : "file/") + applyFileName,
+                                (gameMajorVersion <= 12 ? "" : "file/") + extraPackName,
+                                resourcePackIndex,
+                                customExtraPackIndex,
+                                needDownloadResourcePack,
+                                needLoadExtraResourcePack
+                        );
+                        writer.writeToFile();
+                    }
+                }
+            }
         } catch (Exception e) {
             LOGGER.error("Failed to update resource pack: %s", e);
+        }
+    }
+
+    private static void neteaseWarn() {
+        try {
+            Class.forName("com.netease.mc.mod.network.common.Library");
+            LOGGER.warn("VMTUCore will get resource pack from Internet, whose content is uncontrolled.");
+            LOGGER.warn("This behavior contraries to Netease Minecraft developer content review rule: " +
+                    "forbidden the content in game not match the content for reviewing.");
+            LOGGER.warn("To follow this rule, VMTUCore won't download any thing.");
+            LOGGER.warn("VMTUCore会从互联网获取内容不可控的资源包。");
+            LOGGER.warn("这一行为违背了网易我的世界「开发者内容审核制度」：禁止上传与提审内容不一致的游戏内容。");
+            LOGGER.warn("为了遵循这一制度，VMTUCore不会下载任何内容。");
+        } catch (ClassNotFoundException ignored) {
         }
     }
 
@@ -102,7 +125,7 @@ public class VMTUCore {
 
     }
 
-    public static String getLocalStoragePos(Path minecraftPath) {
+    public static String getLocalStoragePos() {
         Path userHome = Paths.get(System.getProperty("user.home"));
         Path oldPath = userHome.resolve("." + LOCAL_PATH);
         if (Files.exists(oldPath)) {
