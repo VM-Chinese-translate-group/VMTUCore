@@ -134,7 +134,7 @@
       ]
     },
     {
-      "gameVersions": "[26.1,26.1]",
+      "gameVersions": "[26.1,26.1.1]",
       "packFormat": 84,
       "convertFrom": [
         "1.19"
