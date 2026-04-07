@@ -64,7 +64,7 @@ public class VMTUCore {
                 for (GameAssetDetail.AssetDownloadDetail it : assets.downloads) {
                     FileUtil.setTemporaryDirPath(Paths.get(localStorage, "." + LOCAL_PATH, it.targetVersion));
                     ResourcePack languagePack = new ResourcePack(it.fileName, convertNotNeed);
-                    languagePack.checkUpdate(it.fileUrl);
+                    languagePack.checkUpdate(it.fileUrl, it.md5Url);
                     languagePacks.add(languagePack);
                 }
 

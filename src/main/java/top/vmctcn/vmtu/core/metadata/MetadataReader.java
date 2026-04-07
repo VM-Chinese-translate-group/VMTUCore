@@ -90,8 +90,12 @@ public class MetadataReader {
     private static List<GameAssetDetail.AssetDownloadDetail> createDownloadDetails(Metadata.GameMetadata convert, String assetRoot) {
         return convert.convertFrom.stream().map(MetadataReader::getAssetMetaData).map(it -> {
             GameAssetDetail.AssetDownloadDetail adi = new GameAssetDetail.AssetDownloadDetail();
+            String md5Filename = it.filename != null && it.filename.toLowerCase().endsWith(".zip")
+                    ? it.filename.substring(0, it.filename.length() - 4) + ".md5"
+                    : null;
             adi.fileName = it.filename;
             adi.fileUrl = assetRoot + "resourcepack/" + it.filename;
+            adi.md5Url = assetRoot + md5Filename;
             adi.targetVersion = it.targetVersion;
             return adi;
         }).collect(Collectors.toList());
