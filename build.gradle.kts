@@ -21,7 +21,7 @@ tasks.shadowJar {
         include(dependency("net.runelite.archive-patcher:archive-patcher-applier:.*"))
     }
     exclude("LICENSE")
-    archiveClassifier.set("")
+    archiveClassifier.set(null)
 }
 
 repositories {
@@ -54,7 +54,7 @@ tasks.processResources {
 }
 
 tasks.jar {
-    archiveClassifier.set("dev")
+    archiveClassifier.set("raw")
 }
 
 publishing {
