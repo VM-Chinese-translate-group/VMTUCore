@@ -95,7 +95,7 @@ public class MetadataReader {
                     : null;
             adi.fileName = it.filename;
             adi.fileUrl = assetRoot + "resourcepack/" + it.filename;
-            adi.md5Url = assetRoot + md5Filename;
+            adi.md5Url = assetRoot + "resourcepack/" + md5Filename;
             adi.targetVersion = it.targetVersion;
             return adi;
         }).collect(Collectors.toList());
