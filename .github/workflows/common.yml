@@ -28,9 +28,12 @@ jobs:
       -
         name: Build
         run: |
-          ./gradlew clean shadowJar --info --stacktrace
+          ./gradlew clean build --info --stacktrace
       -
         uses: actions/upload-artifact@v6
         with:
-          name: VMTUCore-${{ inputs.type }}-${{ github.run_number }}
-          path: build/libs
+          name: VMTULibraries-${{ inputs.type }}-${{ github.run_number }}
+          path: | 
+            common/build/libs
+            modpack/build/libs
+            resourcepack/build/libs
