@@ -22,6 +22,6 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.VM-Chinese-translate-group:VMTUCore:${module_name}:${version}'
+    implementation 'com.github.VM-Chinese-translate-group:VMTULibraries:${module_name}:${version}'
 }
 ```
