@@ -57,7 +57,6 @@ public class GameOptionsWriter {
         String resourcePack = (gameMajorVersion <= 12 ? "" : "file/") + resourcePackName;
         boolean needDownloadResourcePack = resourcePackInfo.isDownloadPack();
         String extraResourcePack = (gameMajorVersion <= 12 ? "" : "file/") + extraPackInfo.getName();
-        int customPackIndex = extraPackInfo.getCustomIndex();
 
         List<String> resourcePacks = GSON.fromJson(
                 configs.computeIfAbsent("resourcePacks", it -> "[]"), STRING_LIST_TYPE);
