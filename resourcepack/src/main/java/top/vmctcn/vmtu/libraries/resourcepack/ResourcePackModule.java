@@ -18,12 +18,12 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class ResourcePackHelper {
+public class ResourcePackModule {
     private static final String LOCAL_PATH = ".vmtu";
     private static final Path gameDir = CommonContexts.getGameInfo().getGameDir();
     private static final String gameVersion = CommonContexts.getGameInfo().getGameVersion();
 
-    public ResourcePackHelper(ExtraResourcePackInfo extraPackInfo, ResourcePackInfo resourcePackInfo) {
+    public ResourcePackModule(ExtraResourcePackInfo extraPackInfo, ResourcePackInfo resourcePackInfo) {
         CommonContexts.LOGGER.debug(LogMarkers.RESOURCEPACK, String.format("Minecraft path: %s", gameDir));
         String localStorage = getLocalStoragePos();
         CommonContexts.LOGGER.debug(LogMarkers.RESOURCEPACK, String.format("Local Storage Pos: %s", localStorage));
