@@ -19,11 +19,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ResourcePackHelper {
-    public static final String LOCAL_PATH = "vmtu";
+    private static final String LOCAL_PATH = ".vmtu";
     private static final Path gameDir = CommonContexts.getGameInfo().getGameDir();
     private static final String gameVersion = CommonContexts.getGameInfo().getGameVersion();
 
-    public static void init(ExtraResourcePackInfo extraPackInfo, ResourcePackInfo resourcePackInfo) {
+    public ResourcePackHelper(ExtraResourcePackInfo extraPackInfo, ResourcePackInfo resourcePackInfo) {
         CommonContexts.LOGGER.debug(LogMarkers.RESOURCEPACK, String.format("Minecraft path: %s", gameDir));
         String localStorage = getLocalStoragePos();
         CommonContexts.LOGGER.debug(LogMarkers.RESOURCEPACK, String.format("Local Storage Pos: %s", localStorage));
@@ -35,7 +35,7 @@ public class ResourcePackHelper {
         loadTranslationPack(localStorage, extraPackInfo, resourcePackInfo);
     }
 
-    public static void loadTranslationPack(String localStorage, ExtraResourcePackInfo extraPackInfo, ResourcePackInfo resourcePackInfo) {
+    private static void loadTranslationPack(String localStorage, ExtraResourcePackInfo extraPackInfo, ResourcePackInfo resourcePackInfo) {
         String[] gameVersionParts = gameVersion.split("\\.");
         int gameMajorVersion = Integer.parseInt(gameVersionParts.length > 2 ? gameVersionParts[1] : gameVersionParts[0]);
 
@@ -108,7 +108,7 @@ public class ResourcePackHelper {
 
     public static String getLocalStoragePos() {
         Path userHome = Paths.get(System.getProperty("user.home"));
-        Path oldPath = userHome.resolve("." + LOCAL_PATH);
+        Path oldPath = userHome.resolve(LOCAL_PATH);
         if (Files.exists(oldPath)) {
             return userHome.toString();
         }
@@ -125,8 +125,6 @@ public class ResourcePackHelper {
             xdgDataHome = userHome.resolve(".local/share").toString();
         }
 
-        return Stream.of(localAppData, macAppSupport).filter(
-                Objects::nonNull
-        ).findFirst().orElse(xdgDataHome);
+        return Stream.of(localAppData, macAppSupport).filter(Objects::nonNull).findFirst().orElse(xdgDataHome);
     }
 }
