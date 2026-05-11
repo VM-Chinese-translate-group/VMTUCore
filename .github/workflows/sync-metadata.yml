@@ -1,4 +1,4 @@
-name: Sync metadata.json File
+name: Sync `metadata.json` File
 
 on:
   schedule:
@@ -19,7 +19,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Download metadata.json file
+      - name: Download `metadata.json` file
         run: |
           mkdir -p temp
 
@@ -58,7 +58,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-          branch: auto/sync-upstream-file
+          branch: sync-metadata
 
           delete-branch: true
 
