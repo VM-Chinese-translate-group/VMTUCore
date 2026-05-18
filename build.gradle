@@ -1,0 +1,51 @@
+plugins {
+    id 'java'
+    id 'com.gradleup.shadow' version '9.+'
+    id 'maven-publish'
+}
+
+base {
+    archivesName = libs.versions.core.name.get()
+}
+version = libs.versions.core.version.get()
+group = 'top.vmctcn.vmtu.libraries'
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'maven-publish'
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(8)
+        }
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    repositories {
+        mavenCentral()
+        maven { url = 'https://libraries.minecraft.net/' }
+        maven { url = 'https://maven.fabricmc.net/' }
+        maven { url = 'https://files.minecraftforge.net/maven' }
+        maven { url = 'https://repo.runelite.net/' }
+    }
+
+    configurations.configureEach {
+        transitive = false
+    }
+
+    dependencies {
+        implementation libs.archive.patcher.applier
+        implementation libs.log4j
+        compileOnly libs.jetbrains.annotations
+
+        implementation libs.commons.io
+        implementation libs.gson
+    }
+
+    tasks.named('processResources') {
+        filesMatching('**') {
+            expand(version: project.version)
+        }
+    }
+}

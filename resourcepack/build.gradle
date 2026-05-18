@@ -1,0 +1,37 @@
+plugins {
+    id 'java'
+    id 'com.gradleup.shadow'
+}
+
+base.archivesName = "${libs.versions.core.name.get()}-${project.name}"
+group = "${libs.versions.core.group.get()}.${project.name}"
+version = libs.versions.core.version.get()
+
+dependencies {
+    implementation project(':common')
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact shadowJar
+        }
+    }
+
+    repositories {
+    }
+}
+
+shadowJar {
+    minimize()
+    relocate("com.google.archivepatcher", "include.com.google.archivepatcher")
+    dependencies {
+        include(dependency('net.runelite.archive-patcher:archive-patcher-applier:.*'))
+    }
+    exclude 'LICENSE'
+    archiveClassifier.set('')
+}
+
+jar {
+    archiveClassifier.set('raw')
+}

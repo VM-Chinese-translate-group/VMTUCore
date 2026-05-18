@@ -84,9 +84,12 @@ public class MetadataReader {
         CommonContexts.LOGGER.debug(LogMarkers.RESOURCEPACK, "Using asset root: {}", assetRoot);
 
         ret.downloads = createDownloadDetails(convert, assetRoot);
-        ret.covertPackFormat = convert.packFormat;
         ret.covertFileName = String.format("VMTranslationPack-Converted-%s.zip", minecraftVersion);
         return ret;
+    }
+
+    public static Metadata.GameMetadata getPackFormat(String minecraftVersion) {
+        return getGameMetaData(minecraftVersion);
     }
 
     private static List<GameAssetDetail.AssetDownloadDetail> createDownloadDetails(Metadata.GameMetadata convert, String assetRoot) {

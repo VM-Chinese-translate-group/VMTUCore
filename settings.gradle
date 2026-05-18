@@ -1,0 +1,5 @@
+rootProject.name = "VMTULibraries"
+
+include "common"
+include "modpack"
+include "resourcepack"

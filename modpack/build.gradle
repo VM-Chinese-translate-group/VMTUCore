@@ -1,0 +1,22 @@
+plugins {
+    id 'java'
+}
+
+base.archivesName = "${libs.versions.core.name.get()}-${project.name}"
+group = "${libs.versions.core.group.get()}.${project.name}"
+version = libs.versions.core.version.get()
+
+dependencies {
+    implementation project(':common')
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact tasks.jar
+        }
+    }
+
+    repositories {
+    }
+}

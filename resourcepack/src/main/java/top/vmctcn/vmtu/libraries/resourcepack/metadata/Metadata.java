@@ -8,8 +8,12 @@ public class Metadata {
 
     public static class GameMetadata {
         public String gameVersions;
-        public int packFormat;
+        public Integer packFormat, minFormat, maxFormat;
         public List<String> convertFrom;
+
+        public boolean useNewFormat() {
+            return minFormat != null && maxFormat != null;
+        }
     }
 
     public static class AssetMetadata {

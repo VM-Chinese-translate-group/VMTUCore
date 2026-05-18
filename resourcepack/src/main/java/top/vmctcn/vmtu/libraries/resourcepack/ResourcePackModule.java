@@ -2,6 +2,7 @@ package top.vmctcn.vmtu.libraries.resourcepack;
 
 import top.vmctcn.vmtu.libraries.common.CommonContexts;
 import top.vmctcn.vmtu.libraries.common.LogMarkers;
+import top.vmctcn.vmtu.libraries.resourcepack.metadata.Metadata;
 import top.vmctcn.vmtu.libraries.resourcepack.pack.*;
 import top.vmctcn.vmtu.libraries.resourcepack.metadata.MetadataReader;
 import top.vmctcn.vmtu.libraries.resourcepack.metadata.GameAssetDetail;
@@ -50,7 +51,7 @@ public class ResourcePackModule {
                 boolean convertNotNeed = assets.downloads.size() == 1 && assets.downloads.get(0).targetVersion.equals(gameVersion);
                 applyFileName = assets.downloads.get(0).fileName;
                 for (GameAssetDetail.AssetDownloadDetail it : assets.downloads) {
-                    FileUtil.setTemporaryDirPath(Paths.get(localStorage, "." + LOCAL_PATH, it.targetVersion));
+                    FileUtil.setTemporaryDirPath(Paths.get(localStorage, LOCAL_PATH, it.targetVersion));
                     ResourcePack languagePack = new ResourcePack(it.fileName, convertNotNeed);
                     languagePack.checkUpdate(it.fileUrl, it.md5Url);
                     languagePacks.add(languagePack);
@@ -58,10 +59,11 @@ public class ResourcePackModule {
 
                 //Convert resourcepack
                 if (!convertNotNeed) {
-                    FileUtil.setTemporaryDirPath(Paths.get(localStorage, "." + LOCAL_PATH, gameVersion));
+                    FileUtil.setTemporaryDirPath(Paths.get(localStorage, LOCAL_PATH, gameVersion));
                     applyFileName = assets.covertFileName;
+                    Metadata.GameMetadata metadata = MetadataReader.getPackFormat(gameVersion);
                     ResourcePackConverter converter = new ResourcePackConverter(languagePacks, applyFileName);
-                    converter.convert(assets.covertPackFormat, getResourcePackDescription(assets.downloads));
+                    converter.convert(metadata, getResourcePackDescription(assets.downloads));
                 }
             }
 
