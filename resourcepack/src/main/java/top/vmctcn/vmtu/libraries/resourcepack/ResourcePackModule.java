@@ -61,7 +61,7 @@ public class ResourcePackModule {
                 if (!convertNotNeed) {
                     FileUtil.setTemporaryDirPath(Paths.get(localStorage, LOCAL_PATH, gameVersion));
                     applyFileName = assets.covertFileName;
-                    Metadata.GameMetadata metadata = MetadataReader.getPackFormat(gameVersion);
+                    Metadata.GameMetadata metadata = MetadataReader.getGameMetaData(gameVersion);
                     ResourcePackConverter converter = new ResourcePackConverter(languagePacks, applyFileName);
                     converter.convert(metadata, getResourcePackDescription(assets.downloads));
                 }

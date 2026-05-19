@@ -12,7 +12,7 @@ public class Metadata {
         public List<String> convertFrom;
 
         public boolean useNewFormat() {
-            return minFormat != null && maxFormat != null;
+            return (minFormat != null && maxFormat != null) && packFormat > 65;
         }
     }
 

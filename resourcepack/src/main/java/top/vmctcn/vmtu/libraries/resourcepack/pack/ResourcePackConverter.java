@@ -74,9 +74,12 @@ public class ResourcePackConverter {
 
     private byte[] convertPackMeta(InputStream is, Metadata.GameMetadata metadata, String description) {
         PackMeta meta = GSON.fromJson(new InputStreamReader(is, StandardCharsets.UTF_8), PackMeta.class);
-        meta.pack.pack_format = metadata.useNewFormat() ? null : metadata.packFormat;
-        meta.pack.min_format = metadata.useNewFormat() ? metadata.minFormat : null;
-        meta.pack.max_format = metadata.useNewFormat() ? metadata.maxFormat : null;
+        if (metadata.useNewFormat()) {
+            meta.pack.min_format = metadata.minFormat;
+            meta.pack.max_format = metadata.maxFormat;
+        } else {
+            meta.pack.pack_format = metadata.packFormat;
+        }
         meta.pack.description = description;
         return GSON.toJson(meta).getBytes(StandardCharsets.UTF_8);
     }

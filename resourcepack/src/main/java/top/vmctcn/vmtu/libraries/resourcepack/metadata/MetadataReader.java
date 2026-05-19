@@ -61,7 +61,7 @@ public class MetadataReader {
         }
     }
 
-    private static Metadata.GameMetadata getGameMetaData(String minecraftVersion) {
+    public static Metadata.GameMetadata getGameMetaData(String minecraftVersion) {
         Version version = Version.from(minecraftVersion);
         return metadata.games.stream().filter(it -> {
             VersionRange range = new VersionRange(it.gameVersions);
@@ -86,10 +86,6 @@ public class MetadataReader {
         ret.downloads = createDownloadDetails(convert, assetRoot);
         ret.covertFileName = String.format("VMTranslationPack-Converted-%s.zip", minecraftVersion);
         return ret;
-    }
-
-    public static Metadata.GameMetadata getPackFormat(String minecraftVersion) {
-        return getGameMetaData(minecraftVersion);
     }
 
     private static List<GameAssetDetail.AssetDownloadDetail> createDownloadDetails(Metadata.GameMetadata convert, String assetRoot) {

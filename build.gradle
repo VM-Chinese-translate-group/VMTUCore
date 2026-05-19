@@ -4,11 +4,9 @@ plugins {
     id 'maven-publish'
 }
 
-base {
-    archivesName = libs.versions.core.name.get()
-}
+base.archivesName = libs.versions.core.name.get()
 version = libs.versions.core.version.get()
-group = 'top.vmctcn.vmtu.libraries'
+group = libs.versions.core.group.get()
 
 subprojects {
     apply plugin: 'java'
@@ -20,6 +18,8 @@ subprojects {
         }
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+        
+        withSourcesJar()
     }
 
     repositories {
