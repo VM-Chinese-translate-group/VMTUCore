@@ -77,6 +77,7 @@ public class ResourcePackConverter {
         if (metadata.useNewFormat()) {
             meta.pack.min_format = metadata.minFormat;
             meta.pack.max_format = metadata.maxFormat;
+            meta.pack.pack_format = null;
         } else {
             meta.pack.pack_format = metadata.packFormat;
         }
