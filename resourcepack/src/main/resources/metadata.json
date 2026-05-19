@@ -121,6 +121,7 @@
     },
     {
       "gameVersions": "[1.21.9,1.21.11]",
+      "packFormat": 75,
       "minFormat": 69,
       "maxFormat": 75,
       "convertFrom": [
@@ -129,6 +130,7 @@
     },
     {
       "gameVersions": "[26.1,26.1.2]",
+      "packFormat": 84,
       "minFormat": 76,
       "maxFormat": 84,
       "convertFrom": [
